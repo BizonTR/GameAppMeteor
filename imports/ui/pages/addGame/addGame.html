@@ -1,3 +1,16 @@
+<!-- imports/ui/pages/addGame.html -->
+
 <template name="addGame">
-    <p>Welcome to Add Game Panel</p>
+    <h2>Add New Game</h2>
+    <form id="add-game-form">
+        <div>
+            <label for="game-name">Game Name:</label>
+            <input type="text" id="game-name" name="name" placeholder="Enter game name" required>
+        </div>
+        <div>
+            <label for="game-description">Game Description:</label>
+            <textarea id="game-description" name="description" placeholder="Enter game description" required></textarea>
+        </div>
+        <button type="submit">Create Game</button>
+    </form>
 </template>

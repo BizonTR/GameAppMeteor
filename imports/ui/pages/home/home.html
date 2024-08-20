@@ -1,5 +1,27 @@
+<!-- imports/ui/pages/home.html -->
+
 <template name="home">
-    <h1>Games Count</h1>
+    <h1>Games</h1>
     <p>Total games: {{gamesCount}}</p>
     <button id="go-to-add-game">Add New Game</button>
+    
+    <!-- Oyunları listelemek için bir tablo oluşturun -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each games}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{description}}</td>
+                <td>{{formattedCreatedAt}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </template>

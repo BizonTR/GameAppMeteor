@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Games } from '../imports/collections/games.js';
-import '../imports/api/games/gamesPublications.js';
+import './games/' //games içindeki index.jsyi direkt import eder
 
 Meteor.startup(() => {
 
@@ -12,12 +12,12 @@ Meteor.startup(() => {
 
   try {
     // Veritabanında varsayılan veri olup olmadığını kontrol edin
-    if (Games.find().count() === 0) {
+    if (Games.find().count() <= 1) {
       console.log("veri yok");
       // Koleksiyona varsayılan veriyi ekleyin
       Games.insert({
-        name: 'Default Game',
-        description: 'This is a default game entry.',
+        name: 'bonk.io',
+        description: 'multiplayer physics game',
         createdAt: new Date()
       });
     } else {
