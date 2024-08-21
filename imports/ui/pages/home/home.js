@@ -22,6 +22,10 @@ Template.home.helpers({
 
 Template.home.events({
   'click #go-to-add-game'(event) {
-    FlowRouter.go('/add-game');
+    FlowRouter.go('/games/add-game');
+  },
+
+  'click #go-to-edit-games'(event) {
+    FlowRouter.go('/games/edit-games');
   }
 });

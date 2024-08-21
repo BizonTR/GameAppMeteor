@@ -1,0 +1,20 @@
+<!-- imports/ui/pages/deleteGame.html -->
+<template name="editGames">
+    <h2>Edit Games</h2>
+    <ul>
+      {{#each games}}
+        <li>
+          {{name}} - {{description}}
+          <button class="delete-game" data-id="{{_id}}">Delete</button>
+          <button class="update-game" data-id="{{_id}}">Update</button>
+        </li>
+      {{/each}}
+    </ul>
+    {{#if errorMessage}}
+      <p class="error">{{errorMessage}}</p>
+    {{/if}}
+    {{#if successMessage}}
+      <p class="success">{{successMessage}}</p>
+    {{/if}}
+  </template>
+  

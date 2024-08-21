@@ -1,0 +1,30 @@
+<!-- imports/ui/pages/updateGame.html -->
+<template name="updateGame">
+    <h2>Update Game</h2>
+    {{#if selectedGame}}
+      <form id="update-game-form">
+        <div>
+          <label for="game-name">Game Name:</label>
+          <input type="text" id="game-name" name="name" value="{{selectedGame.name}}" required>
+        </div>
+        <div>
+          <label for="game-description">Game Description:</label>
+          <textarea id="game-description" name="description" required>{{selectedGame.description}}</textarea>
+        </div>
+        <div>
+          <label for="game-createdAt">Created Date:</label>
+          <input type="text" id="game-createdAt" name="createdAt" value="{{formatDate selectedGame.createdAt}}" disabled>
+        </div>
+        <button type="submit">Update</button>
+      </form>
+    {{else}}
+      <p>No game selected for editing.</p>
+    {{/if}}
+    {{#if errorMessage}}
+      <div class="alert alert-error">{{errorMessage}}</div>
+    {{/if}}
+    {{#if successMessage}}
+      <div class="alert alert-success">{{successMessage}}</div>
+    {{/if}}
+  </template>
+  
