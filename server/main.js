@@ -27,11 +27,11 @@ Meteor.startup(() => {
 
   try {
     // Veritabanında varsayılan veri olup olmadığını kontrol edin
-    if (Genres.find().count() <= 1) {
+    if (Genres.find().count() <= 2) {
       console.log("veri yok");
       // Koleksiyona varsayılan veriyi ekleyin
       Genres.insert({
-        name: 'RPG',
+        name: 'Open World',
         createdAt: new Date()
       });
     } else {
