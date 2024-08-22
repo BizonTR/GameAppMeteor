@@ -1,0 +1,21 @@
+<!-- imports/ui/pages/updateGenre.html -->
+<template name="updateGenre">
+    <h2>Update Genre</h2>
+    {{#if selectedGenre}}
+    <form id="update-genre-form">
+        <div>
+            <label for="genre-name">Genre Name:</label>
+            <input type="text" id="genre-name" name="name" value="{{selectedGenre.name}}" required>
+        </div>
+        <button type="submit">Update</button>
+    </form>
+    {{else}}
+    <p>No genre selected for editing.</p>
+    {{/if}}
+    {{#if errorMessage}}
+    <div class="alert alert-error">{{errorMessage}}</div>
+    {{/if}}
+    {{#if successMessage}}
+    <div class="alert alert-success">{{successMessage}}</div>
+    {{/if}}
+</template>

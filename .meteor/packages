@@ -30,3 +30,4 @@ ostrio:flow-router-extra
 blaze
 templating
 kadira:blaze-layout
+mdg:validated-method

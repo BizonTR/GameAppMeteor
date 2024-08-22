@@ -60,9 +60,10 @@ Template.addGame.events({
     const selectedGenres = Template.instance().selectedGenres.get(); // Seçilen genre'leri al
 
     // Yeni oyun ekleme metodu çağırma
-    Meteor.call('games.insert', name, description, selectedGenres, (error) => {
+    Meteor.call('games.insert', {name, description, genres:selectedGenres}, (error) => {
       if (error) {
         alert('An error occurred: ' + error.reason);
+        console.error(error);
       } else {
         alert('Game added successfully');
         // Formu temizleyin
@@ -70,10 +71,7 @@ Template.addGame.events({
         target.description.value = '';
         const selectedGenresInput = document.getElementById('selected-genres');
         selectedGenresInput.value = '';
-        // Seçilen genre'leri sıfırlayın
-        // Sayfayı yeniden yükleyin
         FlowRouter.go('/games/add-game');
-        console.log("sa")
       }
     });
     Template.instance().selectedGenres.set([]);

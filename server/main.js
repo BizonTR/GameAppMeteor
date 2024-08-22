@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import 'meteor/aldeed:collection2/static';
 import { Games } from '../imports/collections/games.js';
 import { Genres } from '../imports/collections/genres.js';
 import './games/' //games içindeki index.jsyi direkt import eder
@@ -42,3 +43,24 @@ Meteor.startup(() => {
     console.error("Hata oluştu:", error);
   }
 });
+
+
+//migration useage
+
+// Migrations.add({
+//   version: 1,
+//   name: "Timezone'lar yukleniyor",
+//   up: Meteor.wrapAsync(async (_, next) => {
+//     const timezones = JSON.parse(Assets.getText('seeds/timezones.json'))
+
+//     for (const timezone of timezones) {
+//       await Timezones.insertAsync(timezone)
+//     }
+
+//     next()
+//   }),
+// })
+
+//server index.js
+
+//Migrations.migrateTo('latest')

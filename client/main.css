@@ -18,3 +18,25 @@ body {
 .alert-error {
   background-color: #f44336;
 }
+
+/* imports/ui/pages/home.css */
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Ensure borders do not overlap */
+}
+
+th, td {
+  padding: 10px; /* Adjust padding for space between columns */
+  border: 1px solid #ddd; /* Optional: add border to table cells */
+}
+
+th {
+  background-color: #f4f4f4; /* Optional: background color for header cells */
+}
+
+/* Optional: add margin or spacing between rows */
+tr {
+  margin-bottom: 5px;
+}
+

@@ -1,0 +1,20 @@
+<!-- imports/ui/pages/addGenre.html -->
+<template name="addGenre">
+    <h2>Add New Genre</h2>
+    <form id="add-genre-form">
+      <div class="mb-3">
+        <label for="genre-name" class="form-label">Genre Name:</label>
+        <input type="text" id="genre-name" name="name" class="form-control" placeholder="Enter genre name" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Genre</button>
+    </form>
+  
+    {{#if errorMessage}}
+      <div class="alert alert-danger">{{errorMessage}}</div>
+    {{/if}}
+  
+    {{#if successMessage}}
+      <div class="alert alert-success">{{successMessage}}</div>
+    {{/if}}
+  </template>
+  

@@ -1,0 +1,16 @@
+<!-- imports/ui/pages/genres.html -->
+<template name="genres">
+    <h2>Genres</h2>
+    <button id="go-to-add-genre">Add New Genre</button>
+
+    <!-- Genre List -->
+    <ul>
+        {{#each genres}}
+        <li>
+            {{name}} (Created on: {{formatDate createdAt}})
+            <button class="delete-genre" data-id="{{_id}}">Delete</button>
+            <button class="update-genre" data-id="{{_id}}">Update</button>
+        </li>
+        {{/each}}
+    </ul>
+</template>
