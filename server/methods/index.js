@@ -1,2 +1,2 @@
 import './games/'
-// import './category/'
+import './genres/'

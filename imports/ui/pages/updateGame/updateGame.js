@@ -2,54 +2,81 @@
 import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Games } from '../../..//collections/games.js'; // Koleksiyon importu
+import { Games } from '../../../collections/games.js';
+import { Genres } from '../../../collections/genres.js'; // Genres koleksiyonunu import edin
 
 Template.updateGame.onCreated(function () {
-    this.errorMessage = new ReactiveVar('');
-    this.successMessage = new ReactiveVar('');
-    const gameId = FlowRouter.getParam('gameId');
-    this.selectedGame = new ReactiveVar(null);
+  this.errorMessage = new ReactiveVar('');
+  this.successMessage = new ReactiveVar('');
+  this.selectedGenres = new ReactiveVar([]);
+  
+  const gameId = FlowRouter.getParam('gameId');
+  this.selectedGame = new ReactiveVar(null);
 
-    this.autorun(() => {
-        this.subscribe('games'); // Oyun verilerini abone edin
-        if (gameId) {
-            this.selectedGame.set(Games.findOne(gameId));
-        }
+  this.autorun(() => {
+    this.subscribe('games');
+    this.subscribe('genres', () => {
+      const game = Games.findOne(gameId);
+      if (game) {
+        this.selectedGame.set(game);
+        this.selectedGenres.set(game.genres || []); // Güncellenmiş genre'leri set edin
+      }
     });
+  });
 });
 
 Template.updateGame.helpers({
-    selectedGame() {
-        return Template.instance().selectedGame.get(); // Seçilen oyunun detayları
-    },
-    errorMessage() {
-        return Template.instance().errorMessage.get();
-    },
-    successMessage() {
-        return Template.instance().successMessage.get();
-    },
-    formatDate(date) {
-        return date ? date.toISOString().split('T')[0] : '';
-    }
+  selectedGame() {
+    return Template.instance().selectedGame.get();
+  },
+  genres() {
+    return Genres.find().fetch(); // Dropdown için genre verilerini döndürün
+  },
+  isSelected(genreId) {
+    const selectedGenres = Template.instance().selectedGenres.get();
+    return selectedGenres.includes(genreId);
+  },
+  formatDate(date) {
+    return date ? date.toISOString().split('T')[0] : '';
+  }
 });
 
 Template.updateGame.events({
-    'submit #update-game-form'(event) {
-        event.preventDefault();
+  'click .dropdown-item'(event) {
+    event.preventDefault();
+    const genreId = event.currentTarget.getAttribute('data-id');
+    let selectedGenres = Template.instance().selectedGenres.get();
 
-        const target = event.target;
-        const gameId = FlowRouter.getParam('gameId');
-        const name = target.name.value;
-        const description = target.description.value;
-
-        // Güncelleme işlemi
-        Meteor.call('games.update', gameId, { name, description }, (error) => {
-            if (error) {
-                alert(error.error);
-            } else {
-                alert('Game updated successfully');
-                FlowRouter.go('/games/edit-games'); // Güncelleme sonrası ana sayfaya yönlendir
-            }
-        });
+    if (selectedGenres.includes(genreId)) {
+      selectedGenres = selectedGenres.filter(id => id !== genreId); // Seçili genre'yi kaldır
+    } else {
+      selectedGenres.push(genreId); // Seçili genre'yi ekle
     }
+
+    Template.instance().selectedGenres.set(selectedGenres);
+
+    // Seçilen genre'leri hidden input alanına ekleyin
+    const selectedGenresInput = document.getElementById('selected-genres');
+    selectedGenresInput.value = selectedGenres.join(',');
+  },
+
+  'submit #update-game-form'(event) {
+    event.preventDefault();
+
+    const target = event.target;
+    const gameId = FlowRouter.getParam('gameId');
+    const name = target.name.value;
+    const description = target.description.value;
+    const genres = Template.instance().selectedGenres.get();
+
+    // Güncelleme işlemi
+    Meteor.call('games.update', gameId, { name, description, genres }, (error) => {
+      if (error) {
+        alert('An error occurred: ' + error.reason);
+      } else {
+        alert('Game updated successfully');
+        FlowRouter.go('/games/edit-games'); // Güncelleme sonrası ana sayfaya yönlendir
+      }
+    });
+  }
 });
