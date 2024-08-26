@@ -36,43 +36,18 @@
     </table>
 
     <!-- Login/Register panel -->
-    <div id="auth-panel" class="auth-panel" style="display: none;">
+    {{#if showAuthPanel}}
+    <div id="auth-panel" class="auth-panel">
         <!-- Kapatma butonu -->
         <div class="close-panel-container">
             <button id="close-auth-panel" class="btn btn-danger close-panel-button">&times;</button>
         </div>
 
-
-        <form id="login-form">
-            <h3>Login</h3>
-            <div class="mb-3">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-            <p>Don't have an account? <a href="#" id="show-register">Create one</a></p>
-        </form>
-
-        <form id="register-form" style="display: none;">
-            <h3>Register</h3>
-            <div class="mb-3">
-                <label for="reg-username">Username:</label>
-                <input type="text" id="reg-username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="reg-email">Email:</label>
-                <input type="email" id="reg-email" name="email" required>
-            </div>
-            <div class="mb-3">
-                <label for="reg-password">Password:</label>
-                <input type="password" id="reg-password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
-        </form>
+        {{#if showLogin}}
+        {{> login}}
+        {{else}}
+        {{> register}}
+        {{/if}}
     </div>
+    {{/if}}
 </template>

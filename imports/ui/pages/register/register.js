@@ -6,24 +6,23 @@ Template.register.events({
     'submit #register-form'(event) {
         event.preventDefault();
         const target = event.target;
-        const username = target.username.value;
-        const email = target.email.value;
-        const password = target.password.value;
-        const confirmPassword = target['confirm-password'].value;
+        const username = target['register-username'].value;
+        const email = target['register-email'].value;
+        const password = target['register-password'].value;
+        const confirmPassword = target['register-confirm-password'].value;
 
-        // Şifrelerin eşleşip eşleşmediğini kontrol et
+        // Check if passwords match
         if (password !== confirmPassword) {
             alert('Şifreler eşleşmiyor. Lütfen tekrar deneyin.');
-            return; // İşlemi sonlandır
+            return; // Stop the registration process
         }
 
-        // Şifreler eşleşiyorsa kullanıcıyı oluştur
+        // Create user if passwords match
         Accounts.createUser({ username, email, password }, (error) => {
             if (error) {
                 alert('Kayıt başarısız: ' + error.reason);
             } else {
-                alert('Kayıt başarılı!');
-                FlowRouter.go('/login'); // Başarılı kayıt sonrası giriş sayfasına yönlendirme
+                window.location.reload();
             }
         });
     }
