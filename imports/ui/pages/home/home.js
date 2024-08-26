@@ -48,20 +48,68 @@ Template.home.events({
     FlowRouter.go('/genres');
   },
 
-  'click #go-to-login'(event) {
-    FlowRouter.go('/login');
+  'click #auth-button'(event) {
+    event.preventDefault();
+    if (Meteor.user()) {
+      // Kullanıcı çıkış yapıyor
+      Meteor.logout((error) => {
+        if (error) {
+          alert('Çıkış yapılamadı: ' + error.reason);
+        } else {
+          window.location.reload();
+        }
+      });
+    } else {
+      // Kullanıcı giriş/kayıt panelini açıyor
+      document.getElementById('auth-panel').style.display = 'block';
+    }
   },
 
-  'click #logout'(event) {
+  'submit #login-form'(event) {
     event.preventDefault();
-    Meteor.logout((error) => {
+    const target = event.target;
+    const username = target.username.value;
+    const password = target.password.value;
+
+    Meteor.loginWithPassword(username, password, (error) => {
       if (error) {
-        alert('Çıkış yapılamadı: ' + error.reason);
+        alert('Giriş başarısız: ' + error.reason);
       } else {
-        FlowRouter.go('/'); // Çıkış yapıldığında ana sayfaya yönlendirme
-        // Sayfayı yeniden yüklemenin garantili yolu:
-        window.location.reload();
+        window.location.reload(); // Giriş başarılı, ana sayfayı yeniden yükleyin
       }
     });
-  }
+  },
+
+  'submit #register-form'(event) {
+    event.preventDefault();
+    const target = event.target;
+    const username = target['username'].value;
+    const email = target['email'].value;
+    const password = target['password'].value;
+
+    Accounts.createUser({ username, email, password }, (error) => {
+      if (error) {
+        alert('Kayıt başarısız: ' + error.reason);
+      } else {
+        window.location.reload(); // Kayıt başarılı, ana sayfayı yeniden yükleyin
+      }
+    });
+  },
+
+  'click #show-register'(event) {
+    event.preventDefault();
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+  },
+
+  'click #show-login'(event) {
+    event.preventDefault();
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+  },
+
+  'click #close-auth-panel'(event) {
+    event.preventDefault();
+    document.getElementById('auth-panel').style.display = 'none'; // Paneli gizler
+  },
 });

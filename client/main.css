@@ -40,3 +40,44 @@ tr {
   margin-bottom: 5px;
 }
 
+/* styles.css veya home.css */
+.auth-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px;
+}
+
+.auth-panel h3 {
+  margin-top: 0;
+}
+
+.auth-panel .mb-3 {
+  margin-bottom: 1rem;
+}
+
+/* styles.css veya home.css */
+
+/* Panel kapama butonunun yer aldığı div'in stilini ayarlıyoruz */
+.close-panel-container {
+  display: flex;        /* Esnek düzen kullanımı */
+  justify-content: flex-end; /* İçeriği sağa hizalar */
+  margin-bottom: 10px;  /* Div ile panel arasına biraz boşluk bırakır */
+}
+
+/* Butonun görünümünü düzenliyoruz */
+.close-panel-button {
+  font-size: 18px;     /* Font boyutunu belirler */
+  cursor: pointer;     /* Fare imlecini değiştirir */
+  color: white;        /* Yazı rengini beyaz yapar */
+  background-color: red; /* Buton arka plan rengini kırmızı yapar */
+  border: none;        /* Kenarlıkları kaldırır */
+  padding: 5px 10px;   /* İç boşluk ayarları */
+}
+

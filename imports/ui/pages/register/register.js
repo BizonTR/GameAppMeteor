@@ -9,13 +9,16 @@ Template.register.events({
         const username = target.username.value;
         const email = target.email.value;
         const password = target.password.value;
+        const confirmPassword = target['confirm-password'].value;
 
-        Accounts.createUser({
-            username,
-            email,
-            password,
-            profile: {} // Boş bir profil nesnesi ile kullanıcıyı oluşturun
-        }, (error) => {
+        // Şifrelerin eşleşip eşleşmediğini kontrol et
+        if (password !== confirmPassword) {
+            alert('Şifreler eşleşmiyor. Lütfen tekrar deneyin.');
+            return; // İşlemi sonlandır
+        }
+
+        // Şifreler eşleşiyorsa kullanıcıyı oluştur
+        Accounts.createUser({ username, email, password }, (error) => {
             if (error) {
                 alert('Kayıt başarısız: ' + error.reason);
             } else {
