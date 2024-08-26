@@ -1,12 +1,17 @@
-<!-- imports/ui/pages/home.html -->
-
 <template name="home">
     <h1>Games</h1>
+
+    {{#if currentUser}}
+        <h2>Welcome {{currentUser.username}}</h2>
+        <button id="logout" class="btn btn-danger">Log Out</button>
+    {{else}}
+        <button id="go-to-login" class="btn btn-primary">Login</button>
+    {{/if}}
+
     <p>Total games: {{gamesCount}}</p>
     <button id="go-to-add-game" class="btn btn-secondary">Add New Game</button>
     <button id="go-to-edit-games" class="btn btn-secondary">Edit Games</button>
     <button id="go-to-genres" class="btn btn-secondary">Genres</button>
-
 
     <!-- Oyunları listelemek için bir tablo oluşturun -->
     <table>

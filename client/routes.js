@@ -11,6 +11,8 @@ import '../imports/ui/pages/updateGame/updateGame.html';
 import '../imports/ui/pages/addGenre/addGenre.html';
 import '../imports/ui/pages/genres/genres.html';
 import '../imports/ui/pages/updateGenre/updateGenre.html';
+import '../imports/ui/pages/register/register.html';
+import '../imports/ui/pages/login/login.html';
 
 
 import '../imports/ui/pages/addGame/addGame.js';
@@ -20,6 +22,8 @@ import '../imports/ui/pages/updateGame/updateGame.js';
 import '../imports/ui/pages/addGenre/addGenre.js';
 import '../imports/ui/pages/genres/genres.js';
 import '../imports/ui/pages/updateGenre/updateGenre.js';
+import '../imports/ui/pages/register/register.js';
+import '../imports/ui/pages/login/login.js';
 
 FlowRouter.route('/', {
   action() {
@@ -65,4 +69,18 @@ FlowRouter.route('/genres/update-genre/:genreId', {
   action(params) {
     BlazeLayout.render('mainLayout', { main: 'updateGenre', genreId: params.genreId });
   },
+});
+
+FlowRouter.route('/login', {
+  name: 'login',
+  action() {
+    BlazeLayout.render('mainLayout', { main: 'login' });
+  }
+});
+
+FlowRouter.route('/register', {
+  name: 'register',
+  action() {
+    BlazeLayout.render('mainLayout', { main: 'register' });
+  }
 });

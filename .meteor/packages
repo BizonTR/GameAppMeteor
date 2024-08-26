@@ -32,3 +32,6 @@ templating
 kadira:blaze-layout
 mdg:validated-method
 percolate:migrations
+accounts-base
+accounts-password
+alanning:roles
