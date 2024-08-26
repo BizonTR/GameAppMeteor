@@ -4,9 +4,12 @@ import { Games } from '../imports/collections/games.js';
 import { Genres } from '../imports/collections/genres.js';
 import './games/' //games içindeki index.jsyi direkt import eder
 import './genres/'
+import { Migrations } from 'meteor/percolate:migrations';
+import './migrations/'; // Migration dosyanızı buraya ekleyin
 
 Meteor.startup(() => {
   console.log("server startup");
+  Migrations.migrateTo('latest');
 
   try {
     // Veritabanında varsayılan veri olup olmadığını kontrol edin

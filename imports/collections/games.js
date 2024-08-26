@@ -9,8 +9,16 @@ export const gameSchema = new SimpleSchema({
   name: String,
   description: String,
   createdAt: Date,
+  updatedAt: {
+    type: Date,
+    optional: true
+  },
+  price: {
+    type: Number,
+    min: 0 // Price alanı negatif olamaz
+  },
   genres: Array,
-  "genres.$":String
+  "genres.$": String
 });
 
 Games.attachSchema(gameSchema);

@@ -31,3 +31,4 @@ blaze
 templating
 kadira:blaze-layout
 mdg:validated-method
+percolate:migrations

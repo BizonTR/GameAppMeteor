@@ -60,6 +60,7 @@ npm-mongo@4.17.2
 observe-sequence@1.0.22
 ordered-dict@1.1.0
 ostrio:flow-router-extra@3.10.1
+percolate:migrations@2.0.0
 promise@0.12.2
 raix:eventemitter@1.0.0
 random@1.2.1

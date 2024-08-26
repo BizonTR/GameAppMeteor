@@ -67,10 +67,11 @@ Template.updateGame.events({
     const gameId = FlowRouter.getParam('gameId');
     const name = target.name.value;
     const description = target.description.value;
+    const price = parseFloat(target.price.value);
     const genres = Template.instance().selectedGenres.get();
 
     // Güncelleme işlemi
-    Meteor.call('games.update', gameId, { name, description, genres }, (error) => {
+    Meteor.call('games.update', gameId, { name, description, price, genres }, (error) => {
       if (error) {
         alert('An error occurred: ' + error.reason);
       } else {

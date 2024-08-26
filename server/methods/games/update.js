@@ -8,6 +8,7 @@ Meteor.methods({
         check(updates, {
             name: String,
             description: String,
+            price: Number,
             genres: [String] // genres array of strings
         });
 
