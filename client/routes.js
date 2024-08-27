@@ -13,6 +13,7 @@ import '../imports/ui/pages/genres/genres.html';
 import '../imports/ui/pages/updateGenre/updateGenre.html';
 import '../imports/ui/pages/register/register.html';
 import '../imports/ui/pages/login/login.html';
+import '../imports/ui/pages/adminPanel/adminPanel.html';
 
 
 import '../imports/ui/pages/addGame/addGame.js';
@@ -24,6 +25,7 @@ import '../imports/ui/pages/genres/genres.js';
 import '../imports/ui/pages/updateGenre/updateGenre.js';
 import '../imports/ui/pages/register/register.js';
 import '../imports/ui/pages/login/login.js';
+import '../imports/ui/pages/adminPanel/adminPanel.js';
 
 FlowRouter.route('/', {
   action() {
@@ -84,3 +86,73 @@ FlowRouter.route('/register', {
     BlazeLayout.render('mainLayout', { main: 'register' });
   }
 });
+
+FlowRouter.route('/admin', {
+  name: 'adminPanel',
+  action() {
+
+    BlazeLayout.render('mainLayout', { main: 'adminPanel' });
+  }
+});
+
+
+// FlowRouter.route('/home', {
+//   // calls just before the action
+//   triggersEnter: [trackRouteEntry],
+//   action: function() {
+//     // do something you like
+//   },
+//   // calls when we decide to move to another route
+//   // but calls before the next route started
+//   triggersExit: [trackRouteClose]
+// });
+
+// function trackRouteEntry(context) {
+//   // context is the output of `FlowRouter.current()`
+//   Mixpanel.track("visit-to-home", context.queryParams);
+// }
+
+// function trackRouteClose(context) {
+//   Mixpanel.track("move-from-home", context.queryParams);
+// }
+
+
+
+// const MustSignIn = function (context, redirect, stop) {
+//   if (!Meteor.userId()) {
+//     redirect(`/signin`)
+//     stop()
+//   }
+// }
+
+// const MustSignOut = function (context, redirect, stop) {
+//   if (Meteor.userId()) {
+//     redirect('/')
+//     stop()
+//   }
+// }
+
+// export { MustSignIn, MustSignOut }
+//FLOWROUTER TIRGGER ENTER USAGE
+
+
+// const routes = FlowRouter.group({
+//   prefix: '/auth',
+//   name: 'auth',
+// })
+
+// routes.route('/signin', {
+//   triggersEnter: [MustSignOut],
+//   action: function (params, queryParams) {
+//     BlazeLayout.render('layout', { page: 'accountSignin'})
+//   },
+// })
+
+// routes.route('/signup', {
+//   triggersEnter: [MustSignOut],
+//   action: function (params, queryParams) {
+//     BlazeLayout.render('layout', { page: 'accountSignup'})
+//   },
+// })
+
+//FLOWROUTER GROUP USAGE

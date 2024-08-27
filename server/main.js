@@ -4,9 +4,11 @@ import { Games } from '../imports/collections/games.js';
 import { Genres } from '../imports/collections/genres.js';
 import './games/'; // games içindeki index.js'yi direkt import eder
 import './genres/';
+import './user/';
 import { Migrations } from 'meteor/percolate:migrations';
 import './migrations/'; // Migration dosyanızı buraya ekleyin
 import { Roles } from 'meteor/alanning:roles';
+import { Accounts } from 'meteor/accounts-base';
 
 Meteor.startup(() => {
   console.log("server startup");
@@ -51,7 +53,8 @@ Meteor.startup(() => {
   const roles = ['admin', 'user'];
 
   roles.forEach(role => {
-    if (!Roles.getAllRoles().fetch().some(r => r.name === role)) {
+    const roleExists = Roles.getAllRoles().fetch().some(r => r._id === role);
+    if (!roleExists) {
       try {
         Roles.createRole(role);
         console.log(`'${role}' rolü oluşturuldu.`);
@@ -78,34 +81,36 @@ Meteor.startup(() => {
     console.error("Kullanıcılara rol atanırken hata oluştu:", error);
   }
 
+  // Admin rolüne sahip hiç kullanıcı yoksa, varsayılan bir admin kullanıcısı oluştur
+  try {
+    console.log("Admin oluşturma işlemi başlıyor");
 
+    // Admin rolü var mı kontrol et
+    const adminRoleExists = Roles.getAllRoles().fetch().some(r => r._id === 'admin');
 
-    // Admin rolüne sahip hiç kullanıcı yoksa, varsayılan bir admin kullanıcısı oluştur
-    
-    // try {
-    //   console.log("admin oluşturma")
-    //   const adminRoleExists = Roles.getAllRoles().fetch().some(r => r._id === 'admin');
-    //   const adminUserExists = Meteor.users.find({ 'roles': 'admin' }).count() > 0;
-      
-    //   console.log(adminRoleExists)
-    //   console.log(!adminUserExists)
-    //   if (adminRoleExists && !adminUserExists) {
-    //     // Varsayılan admin kullanıcı oluşturuluyor
-    //     const defaultAdminUsername = 'xxx';
-    //     const defaultAdminPassword = 'xxx';
-    //     const defaultAdminEmail = 'xxx';
-  
-    //     const userId = Accounts.createUser({
-    //       username: defaultAdminUsername,
-    //       email: defaultAdminEmail,
-    //       password: defaultAdminPassword,
-    //     });
-  
-    //     // Oluşturulan kullanıcıya 'admin' rolü atanıyor
-    //     Roles.addUsersToRoles(userId, 'admin');
-    //     console.log(`Varsayılan admin kullanıcısı '${defaultAdminUsername}' oluşturuldu ve 'admin' rolü eklendi.`);
-    //   }
-    // } catch (error) {
-    //   console.error("Admin kullanıcısı oluşturulurken hata oluştu:", error);
-    //}
+    // Admin rolüne sahip kullanıcı var mı kontrol et
+    const adminUserExists = Meteor.users.find({ 'roles': 'admin' }).count() > 0;
+
+    console.log(`Admin rolü var mı: ${adminRoleExists}`);
+    console.log(`Admin kullanıcı mevcut mu: ${adminUserExists}`);
+
+    if (adminRoleExists && !adminUserExists) {
+      // Varsayılan admin kullanıcı oluşturuluyor
+      const defaultAdminUsername = 'admin';
+      const defaultAdminPassword = 'admin123';
+      const defaultAdminEmail = 'admin@example.com';
+
+      const userId = Accounts.createUser({
+        username: defaultAdminUsername,
+        email: defaultAdminEmail,
+        password: defaultAdminPassword,
+      });
+
+      // Oluşturulan kullanıcıya 'admin' rolü atanıyor
+      Roles.addUsersToRoles(userId, 'admin');
+      console.log(`Varsayılan admin kullanıcısı '${defaultAdminUsername}' oluşturuldu ve 'admin' rolü eklendi.`);
+    }
+  } catch (error) {
+    console.error("Admin kullanıcısı oluşturulurken hata oluştu:", error);
+  }
 });

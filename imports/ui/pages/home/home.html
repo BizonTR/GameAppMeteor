@@ -2,7 +2,7 @@
     <h1>Games</h1>
 
     {{#if currentUser}}
-    <h2>Welcome {{currentUser.username}}</h2>
+    <h2>Welcome {{currentUser.username}} (Role: {{currentUserRole}})</h2>
     <button id="auth-button" class="btn btn-danger">Log Out</button>
     {{else}}
     <button id="auth-button" class="btn btn-primary">Login/Register</button>

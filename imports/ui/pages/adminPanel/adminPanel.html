@@ -1,0 +1,16 @@
+<template name="adminPanel">
+    {{#if isInRole 'admin'}}
+        <!-- Admin kullanıcılara özel içerik buraya gelecek -->
+        <h1>Welcome to Admin Panel</h1>
+    {{else}}
+        {{#if showAuthPanel}}
+        <div id="auth-panel" class="auth-panel">
+            <div class="close-panel-container">
+                <button id="close-auth-panel" class="btn btn-danger close-panel-button">&times;</button>
+            </div>
+
+            <p>Access Denied: You do not have permission to view this page.</p>
+        </div>
+        {{/if}}
+    {{/if}}
+</template>

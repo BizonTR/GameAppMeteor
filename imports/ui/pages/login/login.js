@@ -19,3 +19,5 @@ Template.login.events({
         });
     }
 });
+
+//loginden sonra refrsh yerine paneli kapatalım.

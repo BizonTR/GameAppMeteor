@@ -4,8 +4,10 @@ import { Games } from '../../../collections/games.js';
 import { Genres } from '../../../collections/genres.js';
 import { subscribeToGames } from '/client/subscriptions/gamesSubscriptions.js';
 import { subscribeToGenres } from '/client/subscriptions/genresSubscriptions.js';
+import { Roles } from 'meteor/alanning:roles'; // Meteor Roles paketini dahil edin
 
 Template.home.onCreated(function () {
+  this.subscribe('currentUserRoles');
   this.subscribeToGames = subscribeToGames();
   this.subscribeToGenres = subscribeToGenres();
 
@@ -35,6 +37,16 @@ Template.home.helpers({
 
   currentUser() {
     return Meteor.user();
+  },
+
+  currentUserRole() {
+    const user = Meteor.user();
+    if (user) {
+      // Roller verilerini doğrudan 'user' nesnesinden alın
+      const roles = Roles.getRolesForUser(user._id);
+      return roles.length ? roles.join(', ') : 'No roles assigned';
+    }
+    return 'No user logged in';
   },
 
   showAuthPanel() {
