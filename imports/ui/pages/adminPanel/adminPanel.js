@@ -43,15 +43,15 @@ Template.adminPanel.events({
     },
 
     'click #go-to-add-game'(event) {
-        FlowRouter.go('/games/add-game');
+        FlowRouter.go('/admin/games/add-game');
     },
 
     'click #go-to-edit-games'(event) {
-        FlowRouter.go('/games/edit-games');
+        FlowRouter.go('/admin/games/edit-games');
     },
 
     'click #go-to-genres'(event) {
-        FlowRouter.go('/genres');
+        FlowRouter.go('/admin/genres');
     }
 });
 

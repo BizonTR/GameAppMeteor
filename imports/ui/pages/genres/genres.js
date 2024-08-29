@@ -20,7 +20,7 @@ Template.genres.helpers({
 
 Template.genres.events({
     'click #go-to-add-genre'(event) {
-        FlowRouter.go('/genres/add-genre');
+        FlowRouter.go('/admin/genres/add-genre');
     },
 
     'click .delete-genre'(event) {
@@ -40,6 +40,6 @@ Template.genres.events({
 
     'click .update-genre'(event) {
         const genreId = event.currentTarget.getAttribute('data-id');
-        FlowRouter.go(`/genres/update-genre/${genreId}`);
+        FlowRouter.go(`/admin/genres/update-genre/${genreId}`);
     }
 });

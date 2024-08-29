@@ -1,5 +1,4 @@
-import { FlowRouter } from 'meteor/kadira:flow-router';
-import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 import '../imports/ui/layouts/mainLayout.html'
 
@@ -30,76 +29,85 @@ import '../imports/ui/pages/adminPanel/adminPanel.js';
 FlowRouter.route('/', {
   name: 'home',
   action() {
-    BlazeLayout.render('mainLayout', { main: 'home' });
+    this.render('mainLayout', { main: 'home' });
   }
 });
 
-FlowRouter.route('/games/add-game', {
+const adminRoutes = FlowRouter.group({
+  prefix: '/admin',
+  triggersEnter: [function(context, redirect) {
+    const userId = Meteor.userId();
+    
+    if (!userId) {
+      // Kullanıcı giriş yapmamışsa ana sayfaya yönlendir
+      redirect('/');
+      return; // Fonksiyonu sonlandır
+    }
+    
+    const isAdmin = Roles.userIsInRole(userId, ['admin']);
+    
+    if (!isAdmin) {
+      // Eğer kullanıcı admin değilse, ana sayfaya yönlendir
+      redirect('/');
+      return; // Fonksiyonu sonlandır
+    }
+  }],
   action() {
-    BlazeLayout.render('mainLayout', { main: 'addGame' });
-  }
-});
-
-FlowRouter.route('/games/edit-games', {
-  action() {
-    BlazeLayout.render('mainLayout', { main: 'editGames' });
-  }
-});
-
-FlowRouter.route('/games/edit-games/update-game/:gameId', {
-  action(params) {
-    BlazeLayout.render('mainLayout', { main: 'updateGame' });
+    // Eğer kullanıcı admin ise, adminLayout şablonunu render et
+    this.render('mainLayout', { main: 'adminPanel' });
   }
 });
 
 
-FlowRouter.route('/genres/add-genre', {
-  name: 'addGenre',
-  action() {
-    BlazeLayout.render('mainLayout', { main: 'addGenre' });
-  }
-});
 
-FlowRouter.route('/genres', {
-  name: 'genres',
-  action() {
-    BlazeLayout.render('mainLayout', { main: 'genres' });
-  },
-});
 
-FlowRouter.route('/genres/update-genre/:genreId', {
-  name: 'UpdateGenre',
-  action(params) {
-    BlazeLayout.render('mainLayout', { main: 'updateGenre', genreId: params.genreId });
-  },
-});
-
-FlowRouter.route('/login', {
-  name: 'login',
-  action() {
-    BlazeLayout.render('mainLayout', { main: 'login' });
-  }
-});
-
-FlowRouter.route('/register', {
-  name: 'register',
-  action() {
-    BlazeLayout.render('mainLayout', { main: 'register' });
-  }
-});
-
-FlowRouter.route('/admin', {
+adminRoutes.route('/', {
   name: 'adminPanel',
   action() {
+    this.render('mainLayout', { main: 'adminPanel' });
+  }
+});
 
-    BlazeLayout.render('mainLayout', { main: 'adminPanel' });
+adminRoutes.route('/games/add-game', {
+  action() {
+    this.render('mainLayout', { main: 'addGame' });
+  }
+});
+
+adminRoutes.route('/games/edit-games', {
+  action() {
+    this.render('mainLayout', { main: 'editGames' });
+  }
+});
+
+adminRoutes.route('/games/edit-games/update-game/:gameId', {
+  action(params) {
+    this.render('mainLayout', { main: 'updateGame' });
+  }
+});
+
+adminRoutes.route('/genres/add-genre', {
+  action() {
+    this.render('mainLayout', { main: 'addGenre' });
+  }
+});
+
+adminRoutes.route('/genres', {
+  action() {
+    this.render('mainLayout', { main: 'genres' });
+  }
+});
+
+adminRoutes.route('/genres/update-genre/:genreId', {
+  action(params) {
+    this.render('mainLayout', { main: 'updateGenre' });
   }
 });
 
 FlowRouter.route('/search', {
   name: 'search',
   action(params, queryParams) {
-    BlazeLayout.render('mainLayout', { main: 'home', searchTerm: queryParams.term });
+    this.render('mainLayout', { main: 'home', searchTerm: queryParams.term });
   }
 });
 
@@ -152,14 +160,14 @@ FlowRouter.route('/search', {
 // routes.route('/signin', {
 //   triggersEnter: [MustSignOut],
 //   action: function (params, queryParams) {
-//     BlazeLayout.render('layout', { page: 'accountSignin'})
+//     this.render('layout', { page: 'accountSignin'})
 //   },
 // })
 
 // routes.route('/signup', {
 //   triggersEnter: [MustSignOut],
 //   action: function (params, queryParams) {
-//     BlazeLayout.render('layout', { page: 'accountSignup'})
+//     this.render('layout', { page: 'accountSignup'})
 //   },
 // })
 

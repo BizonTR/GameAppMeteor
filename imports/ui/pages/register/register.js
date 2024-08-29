@@ -1,6 +1,5 @@
 import { Template } from 'meteor/templating';
 import { Accounts } from 'meteor/accounts-base';
-import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.register.events({
     'submit #register-form'(event) {
