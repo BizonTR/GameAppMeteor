@@ -8,10 +8,20 @@
     <button id="auth-button" class="btn btn-primary">Login/Register</button>
     {{/if}}
 
+    {{#if loading}}
+    <div class="container" style="display: flex; justify-content: center;">
+        <div class="loader"></div> <!-- Yüklenme mesajı -->
+    </div>
+    {{else}}
+    {{#if noResults}}
+    <p>Oyun bulunamadı.</p>
+    {{else}}
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search games..." />
+        <button id="search-button" class="btn btn-primary">Search</button>
+    </div>
+
     <p>Total games: {{gamesCount}}</p>
-    <button id="go-to-add-game" class="btn btn-secondary">Add New Game</button>
-    <button id="go-to-edit-games" class="btn btn-secondary">Edit Games</button>
-    <button id="go-to-genres" class="btn btn-secondary">Genres</button>
 
     <!-- Oyunları listelemek için bir tablo oluşturun -->
     <table>
@@ -34,6 +44,8 @@
             {{/each}}
         </tbody>
     </table>
+    {{/if}}
+    {{/if}}
 
     <!-- Login/Register panel -->
     {{#if showAuthPanel}}

@@ -2,9 +2,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 Template.adminPanel.onCreated(function () {
     const self = this;
-    
+
     self.showAuthPanel = new ReactiveVar(false);
-    
+
     self.autorun(() => {
         const rolesSubscription = self.subscribe('currentUserRoles');
 
@@ -14,7 +14,7 @@ Template.adminPanel.onCreated(function () {
                 const user = Meteor.users.findOne(userId);
                 if (user) {
                     const userRoles = Roles.getRolesForUser(userId);
-                    
+
                     if (Roles.userIsInRole(userId, 'admin')) {
                         // Admin ise uyarı panelini gösterme
                         self.showAuthPanel.set(false);
@@ -40,6 +40,18 @@ Template.adminPanel.events({
         instance.showAuthPanel.set(false);
         // Yönlendir
         FlowRouter.go('/');
+    },
+
+    'click #go-to-add-game'(event) {
+        FlowRouter.go('/games/add-game');
+    },
+
+    'click #go-to-edit-games'(event) {
+        FlowRouter.go('/games/edit-games');
+    },
+
+    'click #go-to-genres'(event) {
+        FlowRouter.go('/genres');
     }
 });
 

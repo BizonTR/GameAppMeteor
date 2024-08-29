@@ -28,6 +28,7 @@ import '../imports/ui/pages/login/login.js';
 import '../imports/ui/pages/adminPanel/adminPanel.js';
 
 FlowRouter.route('/', {
+  name: 'home',
   action() {
     BlazeLayout.render('mainLayout', { main: 'home' });
   }
@@ -92,6 +93,13 @@ FlowRouter.route('/admin', {
   action() {
 
     BlazeLayout.render('mainLayout', { main: 'adminPanel' });
+  }
+});
+
+FlowRouter.route('/search', {
+  name: 'search',
+  action(params, queryParams) {
+    BlazeLayout.render('mainLayout', { main: 'home', searchTerm: queryParams.term });
   }
 });
 

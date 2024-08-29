@@ -81,3 +81,8 @@ tr {
   padding: 5px 10px;   /* İç boşluk ayarları */
 }
 
+.loading {
+  text-align: center;
+  font-size: 24px;
+  margin-top: 20px;
+}
