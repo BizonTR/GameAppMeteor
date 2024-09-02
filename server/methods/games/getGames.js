@@ -5,75 +5,46 @@ import { Games } from '../../../imports/collections/games.js';
 import { Genres } from '../../../imports/collections/genres.js';
 
 Meteor.methods({
-    'games.getGames'(page, limit, searchTerm = '') {
-        console.log("0")
+    'games.getGames'(page, limit, searchTerm) {
         check(page, Number);
         check(limit, Number);
         check(searchTerm, String);
 
-        if (page <= 0 || isNaN(page)) {
-            return [];
-        }
-
-        const regex = searchTerm ? new RegExp(searchTerm, 'i') : null;
-
         const skip = (page - 1) * limit;
 
-        if (regex) {
-            const totalCount = Games.find({ name: { $regex: regex } }).count();
-            if (skip >= totalCount) {
-                console.log("1")
-                return Games.find({ name: { $regex: regex } }, {
-                    limit: 10,
-                    sort: { createdAt: -1 }
-                }).fetch();
-            }
+        const query = searchTerm
+            ? { name: { $regex: searchTerm, $options: 'i' } }
+            : {};
 
-            console.log("2")
-            return Games.find({ name: { $regex: regex } }, {
-                skip: skip,
-                limit: limit,
-                sort: { createdAt: -1 }
-            }).fetch();
+        const totalGames = Games.find(query).count();
+
+        // Büyük sayfa numarası için kontrol
+        if (skip >= totalGames) {
+            // Eğer toplam oyun sayısından büyükse, son 10 oyunu getir
+            return Games.find(query, { sort: { createdAt: 1 }, limit: limit }).fetch();
         } else {
-            console.log("3")
-            return Games.find({}, {
-                skip: skip,
-                limit: limit,
-                sort: { createdAt: -1 }
-            }).fetch();
+            // Normal sayfa numaraları için
+            return Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
         }
     },
-
-
 
 
     'games.getGamesMainPage'(page, limit) {
         check(page, Number);
         check(limit, Number);
 
-        if (page <= 0 || isNaN(page)) {
-            return [];
-        }
-
         const skip = (page - 1) * limit;
+        const totalGames = Games.find().count();
 
-        const totalCount = Games.find({}).count();
-        if (skip >= totalCount) {
-            return Games.find({}, {
-                limit: 10,
-                sort: { createdAt: -1 }
-            }).fetch();
+        // Büyük sayfa numarası için kontrol
+        if (skip >= totalGames) {
+            // Eğer toplam oyun sayısından büyükse, son 10 oyunu getir
+            return Games.find({}, { sort: { createdAt: 1 }, limit: limit }).fetch();
+        } else {
+            // Normal sayfa numaraları için
+            return Games.find({}, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
         }
-
-        return Games.find({}, {
-            skip: skip,
-            limit: limit,
-            sort: { createdAt: -1 }
-        }).fetch();
-    }
-
-
+    },
 
 });
 

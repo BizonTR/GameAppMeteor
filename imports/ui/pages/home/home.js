@@ -23,14 +23,13 @@ Template.home.onCreated(function () {
 
   const fetchGames = () => {
     const term = instance.searchTerm.get();
-    const page = parseInt(instance.page.get(), 10);
+    let page = parseInt(instance.page.get(), 10);
 
-    // Sayfa numarası geçerli değilse veya NaN ise
+    // Sayfa numarası negatifse, 1 olarak ayarla
     if (page <= 0 || isNaN(page)) {
-        instance.noResults.set(true);
-        instance.games.set([]);
-        instance.loading.set(false);
-        return;
+        page = 1;
+        instance.page.set(page);
+        FlowRouter.setQueryParams({ page: page });
     }
 
     // Arama terimi geçerli değilse
@@ -63,7 +62,13 @@ Template.home.onCreated(function () {
 
   // URL'deki arama terimini ve sayfa numarasını kontrol et ve reaktif değişkenleri güncelle
   const term = FlowRouter.getQueryParam('term');
-  const page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
+  let page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
+
+  // Negatif sayfa numaralarını kontrol et ve 1 olarak ayarla
+  if (page <= 0) {
+      page = 1;
+  }
+
   instance.searchTerm.set(term || '');
   instance.page.set(page);
 
