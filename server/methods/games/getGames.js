@@ -5,56 +5,75 @@ import { Games } from '../../../imports/collections/games.js';
 import { Genres } from '../../../imports/collections/genres.js';
 
 Meteor.methods({
-    'games.getGames'(limit, searchTerm = '') {
+    'games.getGames'(page, limit, searchTerm = '') {
+        console.log("0")
+        check(page, Number);
         check(limit, Number);
         check(searchTerm, String);
 
-        try {
-            // Arama terimini içeren oyunları getir
-            const regex = new RegExp(searchTerm, 'i'); // Case-insensitive regex
-            const games = Games.find({ name: { $regex: regex } }, { limit: limit, sort: { createdAt: -1 } }).fetch();
+        if (page <= 0 || isNaN(page)) {
+            return [];
+        }
 
-            // Tüm oyunlardan genre ID'lerini topla
-            const genreIds = [...new Set(games.flatMap(game => game.genres || []))];
+        const regex = searchTerm ? new RegExp(searchTerm, 'i') : null;
 
-            // Genre verilerini ID'lere göre getir
-            const genres = Genres.find({ _id: { $in: genreIds } }).fetch();
+        const skip = (page - 1) * limit;
 
-            // Oyunlara bağlı genre verilerini ekle
-            return games.map(game => ({
-                ...game,
-                genreDetails: (game.genres || []).map(genreId =>
-                    genres.find(genre => genre._id === genreId)
-                ).filter(genre => genre) // Filtreleme işlemi, undefined değerleri temizler
-            }));
-        } catch (error) {
-            throw new Meteor.Error('500', `Sunucu hatası: ${error.message}`);
+        if (regex) {
+            const totalCount = Games.find({ name: { $regex: regex } }).count();
+            if (skip >= totalCount) {
+                console.log("1")
+                return Games.find({ name: { $regex: regex } }, {
+                    limit: 10,
+                    sort: { createdAt: -1 }
+                }).fetch();
+            }
+
+            console.log("2")
+            return Games.find({ name: { $regex: regex } }, {
+                skip: skip,
+                limit: limit,
+                sort: { createdAt: -1 }
+            }).fetch();
+        } else {
+            console.log("3")
+            return Games.find({}, {
+                skip: skip,
+                limit: limit,
+                sort: { createdAt: -1 }
+            }).fetch();
         }
     },
 
-    'games.getGamesMainPage'(limit) {
+
+
+
+    'games.getGamesMainPage'(page, limit) {
+        check(page, Number);
         check(limit, Number);
 
-        try {
-            // Oyunları getir
-            const games = Games.find({}, { limit: limit, sort: { createdAt: -1 } }).fetch();
-
-            // Tüm oyunlardan genre ID'lerini topla
-            const genreIds = [...new Set(games.flatMap(game => game.genres || []))];
-
-            // Genre verilerini ID'lere göre getir
-            const genres = Genres.find({ _id: { $in: genreIds } }).fetch();
-
-            // Oyunlara bağlı genre verilerini ekle
-            return games.map(game => ({
-                ...game,
-                genreDetails: (game.genres || []).map(genreId =>
-                    genres.find(genre => genre._id === genreId)
-                ).filter(genre => genre) // Filtreleme işlemi, undefined değerleri temizler
-            }));
-        } catch (error) {
-            throw new Meteor.Error('500', `Sunucu hatası: ${error.message}`);
+        if (page <= 0 || isNaN(page)) {
+            return [];
         }
+
+        const skip = (page - 1) * limit;
+
+        const totalCount = Games.find({}).count();
+        if (skip >= totalCount) {
+            return Games.find({}, {
+                limit: 10,
+                sort: { createdAt: -1 }
+            }).fetch();
+        }
+
+        return Games.find({}, {
+            skip: skip,
+            limit: limit,
+            sort: { createdAt: -1 }
+        }).fetch();
     }
+
+
+
 });
 

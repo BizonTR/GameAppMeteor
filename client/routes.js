@@ -106,8 +106,8 @@ adminRoutes.route('/genres/update-genre/:genreId', {
 
 FlowRouter.route('/search', {
   name: 'search',
-  action(params, queryParams) {
-    this.render('mainLayout', { main: 'home', searchTerm: queryParams.term });
+  action(params) {
+    this.render('mainLayout', { main: 'home' });
   }
 });
 

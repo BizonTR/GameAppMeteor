@@ -1,7 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
-import { Games } from '../../../collections/games.js';
 import { Roles } from 'meteor/alanning:roles';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -18,73 +17,69 @@ Template.home.onCreated(function () {
   this.showAuthPanel = new ReactiveVar(false);
   this.showLogin = new ReactiveVar(true);
   this.searchTerm = new ReactiveVar('');
+  this.page = new ReactiveVar(1); // Initialize pagination
 
   const instance = this;
 
   const fetchGames = () => {
     const term = instance.searchTerm.get();
-    instance.loading.set(true); // Arama yaparken yükleniyor mesajı
-    if (term) {
-      Meteor.call('games.getGames', 10, term, (error, result) => {
-        if (error) {
-          console.error('Oyunları getirirken hata oluştu:', error);
-        } else {
-          instance.games.set(result);
-          instance.gamesCount.set(result.length);
-          instance.noResults.set(result.length === 0); // Oyun bulunamadı durumunu güncelle
-          instance.loading.set(false); // Veriler başarıyla yüklendi
-        }
-      });
-    } else {
-      Meteor.call('games.getGamesMainPage', 10, (error, result) => {
-        if (error) {
-          console.error('Oyunları getirirken hata oluştu:', error);
-        } else {
-          instance.games.set(result);
-          instance.gamesCount.set(result.length);
-          instance.noResults.set(result.length === 0); // Oyun bulunamadı durumunu güncelle
-          instance.loading.set(false); // Veriler başarıyla yüklendi
-        }
-      });
+    const page = parseInt(instance.page.get(), 10);
+
+    // Sayfa numarası geçerli değilse veya NaN ise
+    if (page <= 0 || isNaN(page)) {
+        instance.noResults.set(true);
+        instance.games.set([]);
+        instance.loading.set(false);
+        return;
     }
+
+    // Arama terimi geçerli değilse
+    if (term && !/^[\w\s]*$/.test(term)) { // Sadece alfanümerik karakterler ve boşluk kabul edilir
+        instance.noResults.set(true);
+        instance.games.set([]);
+        instance.loading.set(false);
+        return;
+    }
+
+    const fetchMethod = term ? 'games.getGames' : 'games.getGamesMainPage';
+
+    Meteor.call(fetchMethod, page, 10, term, (error, result) => {
+        if (error) {
+            console.error('Oyunları getirirken hata oluştu:', error);
+            instance.noResults.set(true);
+        } else {
+            if (result.length === 0) {
+                instance.noResults.set(true);
+                instance.games.set([]);
+            } else {
+                instance.games.set(result);
+                instance.gamesCount.set(result.length);
+                instance.noResults.set(false); // Oyun bulundu, noResults false
+            }
+        }
+        instance.loading.set(false); // Veriler başarıyla yüklendi
+    });
   };
 
-  // URL'deki arama terimini kontrol et ve reaktif değişkeni güncelle
+  // URL'deki arama terimini ve sayfa numarasını kontrol et ve reaktif değişkenleri güncelle
   const term = FlowRouter.getQueryParam('term');
+  const page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
   instance.searchTerm.set(term || '');
+  instance.page.set(page);
 
   // Oyunları yükle
   fetchGames();
 
-  // Arama terimi değiştiğinde oyunu yeniden yükle
+  // Arama terimi veya sayfa numarası değiştiğinde oyunu yeniden yükle
   this.autorun(() => {
     const searchTerm = instance.searchTerm.get();
-    fetchGames();
+    const page = instance.page.get();
+    if (searchTerm !== FlowRouter.getQueryParam('term') || page !== parseInt(FlowRouter.getQueryParam('page'), 10)) {
+      FlowRouter.setQueryParams({ term: searchTerm, page: page });
+      fetchGames();
+    }
   });
 });
-
-// Template.home.onRendered(function () {
-//   const instance = this;
-//   Tracker.autorun(() => {
-//     const currentPath = FlowRouter.getRouteName();
-//     if (currentPath === 'home') {
-//       // URL'deki term parametresini temizle
-//       FlowRouter.setQueryParams({ term: '' });
-//       // Ana sayfaya dönerken oyunları tekrar getir
-//       Meteor.call('games.getGamesMainPage', 10, (error, result) => {
-//         if (error) {
-//           console.error('Oyunları getirirken hata oluştu:', error);
-//         } else {
-//           instance.games.set(result);
-//           instance.gamesCount.set(result.length);
-//           instance.noResults.set(result.length === 0); // Oyun bulunamadı durumunu güncelle
-//           instance.loading.set(false); // Veriler başarıyla yüklendi
-//         }
-//       });
-//     }
-//   });
-// });
-
 
 Template.home.helpers({
   gamesCount() {
@@ -180,10 +175,10 @@ Template.home.events({
 
   'click #search-button'(event) {
     event.preventDefault();
-    const searchTerm = document.getElementById('search-input').value;
-    // URL'de arama terimini güncelle
-    FlowRouter.go(`/search?term=${encodeURIComponent(searchTerm)}`);
-    Template.instance().searchTerm.set(searchTerm); // searchTerm reaktif değişkenini güncelle
-    Template.instance().loading.set(true); // Arama yaparken yükleniyor mesajı
-  }
+    const searchTerm = document.getElementById('search-input').value.trim();
+    Template.instance().searchTerm.set(searchTerm);
+    Template.instance().page.set(1); // Reset to first page on new search
+    Template.instance().loading.set(true);
+    FlowRouter.setQueryParams({ term: searchTerm, page: 1 });
+  },
 });
