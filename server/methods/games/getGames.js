@@ -9,42 +9,56 @@ Meteor.methods({
         check(page, Number);
         check(limit, Number);
         check(searchTerm, String);
-
+    
         const skip = (page - 1) * limit;
-
+    
         const query = searchTerm
-            ? { name: { $regex: searchTerm, $options: 'i' } }
-            : {};
-
+          ? { name: { $regex: searchTerm, $options: 'i' } }
+          : {};
+    
         const totalGames = Games.find(query).count();
-
-        // Büyük sayfa numarası için kontrol
+    
+        let games;
         if (skip >= totalGames) {
-            // Eğer toplam oyun sayısından büyükse, son 10 oyunu getir
-            return Games.find(query, { sort: { createdAt: 1 }, limit: limit }).fetch();
+          games = Games.find(query, { sort: { createdAt: 1 }, limit: limit }).fetch();
         } else {
-            // Normal sayfa numaraları için
-            return Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
+          games = Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
         }
-    },
+    
+        // Genre bilgilerini oyunlara ekleme
+        games.forEach(game => {
+          const genreIds = game.genres || []; // `genres` alanını kullan
+          const genres = Genres.find({ _id: { $in: genreIds } }).fetch();
+          game.genreDetails = genres; // Tür detaylarını ekle
+        });
+    
+        return games;
+      },
 
 
-    'games.getGamesMainPage'(page, limit) {
+      'games.getGamesMainPage'(page, limit) {
         check(page, Number);
         check(limit, Number);
-
+    
         const skip = (page - 1) * limit;
         const totalGames = Games.find().count();
-
-        // Büyük sayfa numarası için kontrol
+    
+        let games;
         if (skip >= totalGames) {
-            // Eğer toplam oyun sayısından büyükse, son 10 oyunu getir
-            return Games.find({}, { sort: { createdAt: 1 }, limit: limit }).fetch();
+          games = Games.find({}, { sort: { createdAt: 1 }, limit: limit }).fetch();
         } else {
-            // Normal sayfa numaraları için
-            return Games.find({}, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
+          games = Games.find({}, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
         }
-    },
+    
+        // Genre bilgilerini oyunlara ekleme
+        games.forEach(game => {
+          const genreIds = game.genres || []; // `genres` alanını kullan
+          const genres = Genres.find({ _id: { $in: genreIds } }).fetch();
+          game.genreDetails = genres; // Tür detaylarını ekle
+        });
+    
+        return games;
+      }
 
 });
 
