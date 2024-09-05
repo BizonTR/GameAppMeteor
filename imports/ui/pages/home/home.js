@@ -5,6 +5,7 @@ import { Roles } from 'meteor/alanning:roles';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.home.onCreated(function () {
+  const self = this
   this.subscribe('currentUserRoles');
 
   // Oyunları ve genre'leri saklamak için reaktif değişkenler
@@ -50,9 +51,16 @@ Template.home.onCreated(function () {
       return;
     }
 
-    const fetchMethod = term ? 'games.getGames' : 'games.getGamesMainPage';
+    //const fetchMethod = term || selectedGenres.length > 0 ? 'games.getGames' : 'games.getGamesMainPage';
+    const obj = { 
+      page, // = page: page
+      limit: 10,
+      term,
+      selectedGenres,
+     }
 
-    Meteor.call(fetchMethod, page, 10, term, selectedGenres, (error, result) => {
+    instance.loading.set(true)
+    Meteor.call("games.getGames", obj, (error, result) => {
       if (error) {
         console.error('Oyunları getirirken hata oluştu:', error);
         instance.noResults.set(true);
@@ -201,18 +209,21 @@ Template.home.events({
     Template.instance().showLogin.set(true);
   },
 
-  'click #search-button'(event) {
+  'click #search-button'(event,templateInstance) {
     event.preventDefault();
-    const searchTerm = document.getElementById('search-input').value.trim();
-    Template.instance().searchTerm.set(searchTerm);
-    Template.instance().page.set(1);
-    Template.instance().loading.set(true);
+
+    const searchTerm = templateInstance.find("#search-input").value.trim();
+    console.log(searchTerm)
+    templateInstance.searchTerm.set(searchTerm);
+    templateInstance.page.set(1);
+
     FlowRouter.setQueryParams({ term: searchTerm, page: 1 });
   },
 
   'click .dropdown-item'(event, instance) {
     event.preventDefault();
-    const genreId = $(event.currentTarget).data('id');
+    const genreId = this._id;
+    console.log(this)
     let selectedGenres = instance.selectedGenres.get();
 
     if (selectedGenres.includes(genreId)) {
@@ -229,6 +240,5 @@ Template.home.events({
     // Oyunları yeniden yükle
     instance.page.set(1); // Sayfayı 1 olarak ayarla
     instance.searchTerm.set(FlowRouter.getQueryParam('term') || '');
-    instance.autorun();
   }
 });
