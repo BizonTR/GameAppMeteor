@@ -47,29 +47,29 @@ Meteor.methods({
     return games;
   },
 
-  'games.getGamesMainPage'(page, limit) {
-    check(page, Number);
-    check(limit, Number);
+  // 'games.getGamesMainPage'(page, limit) {
+  //   check(page, Number);
+  //   check(limit, Number);
     
-    const skip = (page - 1) * limit;
-    const totalGames = Games.find().count();
+  //   const skip = (page - 1) * limit;
+  //   const totalGames = Games.find().count();
     
-    let games;
-    if (skip >= totalGames) {
-      games = Games.find({}, { sort: { createdAt: 1 }, limit: limit }).fetch();
-    } else {
-      games = Games.find({}, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
-    }
+  //   let games;
+  //   if (skip >= totalGames) {
+  //     games = Games.find({}, { sort: { createdAt: 1 }, limit: limit }).fetch();
+  //   } else {
+  //     games = Games.find({}, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
+  //   }
     
-    // Genre bilgilerini oyunlara ekleme
-    games.forEach(game => {
-      const selectedGenres = game.genres || [];
-      const genres = Genres.find({ _id: { $in: selectedGenres } }).fetch();
-      game.genreDetails = genres;
-    });
+  //   // Genre bilgilerini oyunlara ekleme
+  //   games.forEach(game => {
+  //     const selectedGenres = game.genres || [];
+  //     const genres = Genres.find({ _id: { $in: selectedGenres } }).fetch();
+  //     game.genreDetails = genres;
+  //   });
     
-    return games;
-  }
+  //   return games;
+  // }
 });
 
 

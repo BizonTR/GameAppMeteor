@@ -1,4 +1,5 @@
 import { ReactiveVar } from 'meteor/reactive-var';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.adminPanel.onCreated(function () {
     const self = this;

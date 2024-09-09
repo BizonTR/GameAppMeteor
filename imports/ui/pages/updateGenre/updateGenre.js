@@ -45,7 +45,7 @@ Template.updateGenre.events({
             } else {
                 //Template.instance().successMessage.set('Genre updated successfully');
                 alert('Genre updated successfully');
-                FlowRouter.go('/genres');
+                FlowRouter.go('/admin/genres');
             }
         });
     }

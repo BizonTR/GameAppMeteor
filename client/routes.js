@@ -13,6 +13,7 @@ import '../imports/ui/pages/updateGenre/updateGenre.html';
 import '../imports/ui/pages/register/register.html';
 import '../imports/ui/pages/login/login.html';
 import '../imports/ui/pages/adminPanel/adminPanel.html';
+import '../imports/ui/pages/games/games.html';
 
 
 import '../imports/ui/pages/addGame/addGame.js';
@@ -25,6 +26,7 @@ import '../imports/ui/pages/updateGenre/updateGenre.js';
 import '../imports/ui/pages/register/register.js';
 import '../imports/ui/pages/login/login.js';
 import '../imports/ui/pages/adminPanel/adminPanel.js';
+import '../imports/ui/pages/games/games.js';
 
 FlowRouter.route('/', {
   name: 'home',
@@ -108,6 +110,13 @@ FlowRouter.route('/search', {
   name: 'search',
   action(params) {
     this.render('mainLayout', { main: 'home' });
+  }
+});
+
+FlowRouter.route('/games', {
+  name: 'games',
+  action(params) {
+    this.render('mainLayout', { main: 'games' });
   }
 });
 

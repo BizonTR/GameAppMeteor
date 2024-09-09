@@ -1,5 +1,5 @@
 <template name="home">
-    <h1>Games</h1>
+    <h1>Welcome To The Game App</h1>
 
     {{#if currentUser}}
     <h2>Welcome {{currentUser.username}} (Role: {{currentUserRole}})</h2>
@@ -8,64 +8,14 @@
     <button id="auth-button" class="btn btn-primary">Login/Register</button>
     {{/if}}
 
-    {{#if loading}}
+    <button id="games-button" class="btn btn-primary">Games</button>
+    <button id="admin-panel-button" class="btn btn-primary">Admin Panel</button>
+
+    <!-- {{#if loading}}
     <div class="container" style="display: flex; justify-content: center;">
-        <div class="loader"></div> <!-- Yüklenme mesajı -->
+        <div class="loader"></div>
     </div>
-    {{else}}
-    {{#if noResults}}
-    <p>Oyun bulunamadı.</p>
-    {{else}}
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search games..." />
-        <button id="search-button" class="btn btn-primary">Search</button>
-    </div>
-
-    <!-- Genre Dropdown Menü -->
-    <div class="mb-3">
-      <label class="form-label">Genres:</label>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          Select Genres
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          {{#each genres}}
-          <li>
-            <a class="dropdown-item" href="#" data-id="{{_id}}">
-              {{name}} {{#if (isSelected _id)}}(Selected){{/if}}
-            </a>
-          </li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-
-    <p>Total games: {{gamesCount}}</p>
-
-    <!-- Oyunları listelemek için bir tablo oluşturun -->
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Genres</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each games}}
-            <tr>
-                <td>{{name}}</td>
-                <td>{{description}}</td>
-                <td>{{formattedGenres}}</td>
-                <td>{{formattedCreatedAt}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
-    {{/if}}
-    {{/if}}
+    {{/if}} -->
 
     <!-- Login/Register panel -->
     {{#if showAuthPanel}}

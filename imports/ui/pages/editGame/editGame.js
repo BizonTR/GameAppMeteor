@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Games } from '../../../collections/games.js'; // Games koleksiyonunu import edin
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.editGames.onCreated(function () {
   this.errorMessage = new ReactiveVar('');
@@ -28,7 +29,7 @@ Template.editGames.helpers({
 Template.editGames.events({
   'click .update-game'(event) {
     const gameId = event.currentTarget.getAttribute('data-id');
-    FlowRouter.go(`/games/edit-games/update-game/${gameId}`);
+    FlowRouter.go(`/admin/games/edit-games/update-game/${gameId}`);
   },
 
   'click .delete-game'(event) {

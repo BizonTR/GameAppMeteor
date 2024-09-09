@@ -2,6 +2,7 @@
 import { Template } from 'meteor/templating';
 import { Genres } from '../../../collections/genres.js';
 import { subscribeToGenres } from '../../../../client/subscriptions/genresSubscriptions.js';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.genres.onCreated(function () {
     this.autorun(() => {

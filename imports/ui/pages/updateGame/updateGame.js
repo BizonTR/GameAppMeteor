@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Games } from '../../../collections/games.js';
 import { Genres } from '../../../collections/genres.js'; // Genres koleksiyonunu import edin
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.updateGame.onCreated(function () {
   this.errorMessage = new ReactiveVar('');
@@ -13,7 +14,10 @@ Template.updateGame.onCreated(function () {
   const gameId = FlowRouter.getParam('gameId');
   this.selectedGame = new ReactiveVar(null);
 
+  console.log("Game ID:", gameId);  // Konsolda bu satırı kontrol edin.
+
   this.autorun(() => {
+    console.log("auto")
     this.subscribe('games');
     this.subscribe('genres', () => {
       const game = Games.findOne(gameId);
@@ -76,7 +80,7 @@ Template.updateGame.events({
         alert('An error occurred: ' + error.reason);
       } else {
         alert('Game updated successfully');
-        FlowRouter.go('/games/edit-games'); // Güncelleme sonrası ana sayfaya yönlendir
+        FlowRouter.go('/admin/games/edit-games'); // Güncelleme sonrası ana sayfaya yönlendir
       }
     });
   }
