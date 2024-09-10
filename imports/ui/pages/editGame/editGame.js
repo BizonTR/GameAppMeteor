@@ -35,12 +35,14 @@ Template.editGames.events({
   'click .delete-game'(event) {
     const gameId = event.currentTarget.getAttribute('data-id');
 
-    Meteor.call('games.remove', gameId, (error) => {
-      if (error) {
-        Template.instance().errorMessage.set(error.reason);
-      } else {
-        Template.instance().successMessage.set('Game deleted successfully');
-      }
-    });
+    if (confirm('Are you sure you want to delete this game?')) {
+      Meteor.call('games.remove', {gameId}, (error) => {
+        if (error) {
+          alert('An error occurred: ' + error.reason);
+        } else {
+          alert('Game deleted successfully');
+        }
+      });
+    }
   }
 });

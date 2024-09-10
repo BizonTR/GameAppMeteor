@@ -29,7 +29,7 @@ Template.genres.events({
         const genreId = event.currentTarget.getAttribute('data-id');
 
         if (confirm('Are you sure you want to delete this genre?')) {
-            Meteor.call('genres.remove', genreId, (error) => {
+            Meteor.call('genres.remove', {genreId}, (error) => {
                 if (error) {
                     alert('An error occurred: ' + error.reason);
                 } else {

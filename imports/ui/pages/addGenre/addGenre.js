@@ -29,7 +29,7 @@ Template.addGenre.events({
       return;
     }
 
-    Meteor.call('genres.insert', {name}, (error) => {
+    Meteor.call('genres.insert', {name, createdAt: new Date()}, (error) => {
       if (error) {
         template.errorMessage.set(error.reason);
       } else {

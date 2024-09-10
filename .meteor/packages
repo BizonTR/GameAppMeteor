@@ -34,3 +34,4 @@ percolate:migrations
 accounts-base
 accounts-password
 alanning:roles
+aldeed:autoform

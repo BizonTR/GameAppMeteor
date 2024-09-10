@@ -31,22 +31,21 @@ Template.updateGenre.helpers({
 });
 
 Template.updateGenre.events({
-    'submit #update-genre-form'(event) {
-        event.preventDefault();
+'submit #update-genre-form'(event) {
+    event.preventDefault();
 
-        const target = event.target;
-        const genreId = FlowRouter.getParam('genreId');
-        const name = target.name.value;
+    const target = event.target;
+    const genreId = FlowRouter.getParam('genreId');
+    const name = target.name.value;
 
-        Meteor.call('genres.update', genreId, name, (error) => {
-            if (error) {
-                alert('An error occurred: ' + error.reason);
-                //Template.instance().errorMessage.set(error.reason);
-            } else {
-                //Template.instance().successMessage.set('Genre updated successfully');
-                alert('Genre updated successfully');
-                FlowRouter.go('/admin/genres');
-            }
-        });
-    }
+    Meteor.call('genres.update', { genreId, name }, (error) => {
+        if (error) {
+            alert('An error occurred: ' + error.reason);
+        } else {
+            alert('Genre updated successfully');
+            FlowRouter.go('/admin/genres');
+        }
+    });
+}
+
 });

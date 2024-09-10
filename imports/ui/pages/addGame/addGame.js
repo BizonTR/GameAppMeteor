@@ -2,7 +2,7 @@ import { Template } from 'meteor/templating';
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Genres } from '../../../collections/genres.js';
-import { subscribeToGenres } from '/client/subscriptions/genresSubscriptions.js';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 Template.addGame.onCreated(function () {
   this.genres = new ReactiveVar([]);
@@ -61,7 +61,8 @@ Template.addGame.events({
     const selectedGenres = Template.instance().selectedGenres.get(); // Seçilen genre'leri al
 
     // Yeni oyun ekleme metodu çağırma
-    Meteor.call('games.insert', {name, description, price, genres:selectedGenres}, (error) => {
+    Meteor.call('games.insert', {name, description, createdAt: new Date(), price, genres:selectedGenres}, (error) => {
+      console.log({name, description, price, genres:selectedGenres, createdAt: new Date()})
       if (error) {
         alert('An error occurred: ' + error.reason);
         console.error(error);
@@ -73,7 +74,7 @@ Template.addGame.events({
         target.price.value = '';
         const selectedGenresInput = document.getElementById('selected-genres');
         selectedGenresInput.value = '';
-        FlowRouter.go('/games/add-game');
+        FlowRouter.go('/admin/games/add-game');
       }
     });
     Template.instance().selectedGenres.set([]);

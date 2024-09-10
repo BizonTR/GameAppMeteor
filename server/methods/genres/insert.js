@@ -5,8 +5,8 @@ import { Genres, genreSchema } from '../../../imports/collections/genres.js';
 
 new ValidatedMethod({
   name: 'genres.insert',
-  validate: genreSchema.omit("createdAt").validator(),
+  validate: genreSchema.validator(),
   run(data) {
-    Genres.insert({...data,createdAt: new Date()});
+    Genres.insert(data);
   }
 });

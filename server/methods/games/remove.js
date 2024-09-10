@@ -1,11 +1,17 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
 import { Games } from '../../../imports/collections/games.js'; // Games koleksiyonunu import edin
+import SimpleSchema from 'meteor/aldeed:simple-schema'
 
-Meteor.methods({
-    'games.remove'(gameId) {
-        check(gameId, String);
+const gameIdSchema = new SimpleSchema({
+    gameId: {
+      type: String,
+    },
+  });
 
-        Games.remove(gameId);
-    }
-});
+new ValidatedMethod({
+    name: 'games.remove',
+    validate: gameIdSchema.validator(),
+    run({ gameId }) {
+      Games.remove(gameId);
+    },
+  });
