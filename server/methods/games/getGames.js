@@ -49,6 +49,7 @@ new ValidatedMethod({
 
     let games;
     if (skip >= totalGames) {
+      //createdAt ile oynamak yerine skip-page ile yapılmalı.
       games = Games.find(query, { sort: { createdAt: 1 }, limit: limit }).fetch();
     } else {
       games = Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
@@ -61,6 +62,8 @@ new ValidatedMethod({
       game.genreDetails = genres;
     });
 
+    //toplam sayfa sayısı, şuanki sayfa numarası, onePagelimit, totalGameCount
+    //game koleksiyonu için özel bir işlem değil. isimlendirmeyi ona göre yap.
     return games;
   },
 });
