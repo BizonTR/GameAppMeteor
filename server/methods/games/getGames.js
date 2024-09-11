@@ -1,69 +1,75 @@
-// imports/api/gamesMethods.js
-import { Meteor } from 'meteor/meteor';
+import { getPagingData } from '../../../imports/api/utils/paging.js';
 import { Games } from '../../../imports/collections/games.js';
 import { Genres } from '../../../imports/collections/genres.js';
-import SimpleSchema from 'meteor/aldeed:simple-schema'
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
-// Şema doğrulaması
 new ValidatedMethod({
   name: 'games.getGames',
   validate: new SimpleSchema({
     page: {
       type: SimpleSchema.Integer,
-      min: 1, // Sayfa numarası en az 1 olmalı
+      min: 1,
     },
     limit: {
       type: SimpleSchema.Integer,
-      min: 1, // Limit en az 1 olmalı
+      min: 1,
     },
     term: {
       type: String,
-      optional: true, // Term boş olabilir
+      optional: true,
     },
     selectedGenres: {
       type: Array,
-      optional: true, // Genre listesi boş olabilir
+      optional: true,
     },
     'selectedGenres.$': {
-      type: String, // Her bir genre string olmalı
+      type: String,
     },
   }).validator(),
   
   run({ page, limit, term = '', selectedGenres = [] }) {
-    const skip = (page - 1) * limit;
-
-    // Arama ve genre filtresi için sorgu
     const query = {};
 
+    // Genre filtresi ekle
     if (selectedGenres.length > 0) {
       query.genres = { $all: selectedGenres };
     }
 
+    // İsim filtresi ekle
     if (term) {
       query.name = { $regex: term, $options: 'i' };
     }
 
-    console.log(query);
-
+    // Toplam oyun sayısını al
     const totalGames = Games.find(query).count();
 
-    let games;
-    if (skip >= totalGames) {
-      //createdAt ile oynamak yerine skip-page ile yapılmalı.
-      games = Games.find(query, { sort: { createdAt: 1 }, limit: limit }).fetch();
-    } else {
-      games = Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
-    }
+    // Paging verilerini al
+    const { totalPages, currentPage, skip } = getPagingData({
+      page,
+      limit,
+      totalCount: totalGames,
+    });
 
-    // Genre bilgilerini oyunlara ekleme
+    // Eğer skip toplam oyun sayısını aşıyorsa, son sayfayı hesapla ve skip değerini yeniden ayarla
+    const adjustedPage = skip >= totalGames ? totalPages : currentPage;
+    const adjustedSkip = (adjustedPage - 1) * limit;
+
+    // Oyunları getir
+    const games = Games.find(query, { sort: { createdAt: -1 }, skip: adjustedSkip, limit: limit }).fetch();
+
+    // Genre bilgilerini oyunlara ekle
     games.forEach(game => {
       const selectedGenres = game.genres || [];
       const genres = Genres.find({ _id: { $in: selectedGenres } }).fetch();
       game.genreDetails = genres;
     });
 
-    //toplam sayfa sayısı, şuanki sayfa numarası, onePagelimit, totalGameCount
-    //game koleksiyonu için özel bir işlem değil. isimlendirmeyi ona göre yap.
-    return games;
+    // Şablona dönülecek veriler
+    return {
+      games,
+      totalPages,
+      currentPage,
+      totalGames, // Toplam oyun sayısını şablona gönderiyoruz
+    };
   },
 });

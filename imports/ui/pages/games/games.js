@@ -10,7 +10,7 @@ Template.games.onCreated(function () {
   // Oyunları ve genre'leri saklamak için reaktif değişkenler
   this.games = new ReactiveVar([]);
   this.genres = new ReactiveVar([]);
-  this.gamesCount = new ReactiveVar(0);
+  this.dataInfo = new ReactiveVar({});
   this.noResults = new ReactiveVar(false);
   this.loading = new ReactiveVar(true);
 
@@ -33,23 +33,22 @@ Template.games.onCreated(function () {
   });
 
   const fetchGames = () => {
-    console.log("fetchgames");
     const term = instance.searchTerm.get();
     let page = parseInt(instance.page.get(), 10);
     const selectedGenres = instance.selectedGenres.get();
 
     if (FlowRouter.getQueryParam('page') !== undefined) {
         FlowRouter.setQueryParams({ page: page });
-      }
+    }
 
     const obj = { 
-      page, // = page: page
+      page,
       limit: 10,
       term,
       selectedGenres,
      }
 
-    instance.loading.set(true)
+    instance.loading.set(true);
     Meteor.call("games.getGames", obj, (error, result) => {
       if (error) {
         console.error('Oyunları getirirken hata oluştu:', error);
@@ -60,7 +59,8 @@ Template.games.onCreated(function () {
           instance.games.set([]);
         } else {
           instance.games.set(result);
-          instance.gamesCount.set(result.length);
+          console.log(result)
+          instance.dataInfo.set(result);
           instance.noResults.set(false);
         }
       }
@@ -81,34 +81,28 @@ Template.games.onCreated(function () {
   instance.page.set(page);
   instance.selectedGenres.set(selectedGenres);
 
-  //fetchGames();
-
   this.autorun(() => {
-    console.log("autorun")
     fetchGames();
-    const searchTerm = instance.searchTerm.get();
-    const page = instance.page.get();
-    const selectedGenres = instance.selectedGenres.get();
-    
-    if (searchTerm !== FlowRouter.getQueryParam('term') || page !== parseInt(FlowRouter.getQueryParam('page'), 10) || !arraysEqual(selectedGenres, (FlowRouter.getQueryParam('genres') ? FlowRouter.getQueryParam('genres').split(',') : []))) {
-      //FlowRouter.setQueryParams({ term: searchTerm, page: page, genres: selectedGenres.join(',') });
-      //fetchGames();
-    }
+    // const searchTerm = instance.searchTerm.get();
+    // const page = instance.page.get();
+    // const selectedGenres = instance.selectedGenres.get();
+
+    // if (searchTerm !== FlowRouter.getQueryParam('term') || page !== parseInt(FlowRouter.getQueryParam('page'), 10) || !arraysEqual(selectedGenres, (FlowRouter.getQueryParam('genres') ? FlowRouter.getQueryParam('genres').split(',') : []))) {
+    //   FlowRouter.setQueryParams({ term: searchTerm, page: page, genres: selectedGenres.join(',') });
+    // }
   });
 });
 
-function arraysEqual(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-  return arr1.every((value, index) => value === arr2[index]);
-}
-
 Template.games.helpers({
   gamesCount() {
-    return Template.instance().gamesCount.get();
+    const dataInfo = Template.instance().dataInfo.get();
+    return dataInfo.totalGames || 0; // Eğer totalGames yoksa 0 döndür
   },
 
   games() {
-    return Template.instance().games.get();
+    const data = Template.instance().games.get();
+    // Eğer data bir nesne ise, diziye dönüştürün
+    return Array.isArray(data) ? data : data.games || [];
   },
 
   noResults() {
@@ -134,40 +128,95 @@ Template.games.helpers({
 
   isSelected(genreId) {
     return Template.instance().selectedGenres.get().includes(genreId);
+  },
+
+  totalPages() {
+    console.log("totalpages")
+    const dataInfo = Template.instance().dataInfo.get();
+    console.log(dataInfo)
+    console.log(Math.max(1, Math.ceil(dataInfo.totalGames / 10)))
+    return Math.max(1, Math.ceil(dataInfo.totalGames / 10));
+  },
+
+  totalPagesInRange() {
+    const dataInfo = Template.instance().dataInfo.get();
+    const totalPages = dataInfo.totalPages || 0;
+    let range = [];
+    for (let i = 1; i <= totalPages; i++) {
+      range.push(i);
+    }
+    return range;
+  },
+
+  isCurrentPage(page) {
+    return Template.instance().page.get() === page;
+  },
+
+  isPreviousDisabled() {
+    return Template.instance().page.get() <= 1;
+  },
+
+  isNextDisabled() {
+    const instance = Template.instance();
+    const dataInfo = instance.dataInfo.get(); // dataInfo'yu al
+    const page = dataInfo.currentPage; // Mevcut sayfa numarasını al
+    const totalPages = dataInfo.totalPages || 0;
+    return page >= totalPages;
   }
 });
 
 Template.games.events({
-  'click #search-button'(event,templateInstance) {
+  'click .page-number'(event, templateInstance) {
+    event.preventDefault();
+    const page = parseInt(event.currentTarget.dataset.page, 10);
+    if (page > 0) {
+      templateInstance.page.set(page);
+      FlowRouter.setQueryParams({ page: page});
+    }
+  },
+
+  'click #previous-page'(event, templateInstance) {
+    event.preventDefault();
+    let page = templateInstance.page.get();
+    if (page > 1) {
+      page -= 1;
+      templateInstance.page.set(page);
+      FlowRouter.setQueryParams({ page: page});
+    }
+  },
+
+  'click #next-page'(event, templateInstance) {
+    event.preventDefault();
+    let page = templateInstance.page.get();
+    page += 1;
+    templateInstance.page.set(page);
+    FlowRouter.setQueryParams({ page: page});
+  },
+
+  'click #search-button'(event, templateInstance) {
     event.preventDefault();
 
     const searchTerm = templateInstance.find("#search-input").value.trim();
-    console.log(searchTerm)
     templateInstance.searchTerm.set(searchTerm);
     templateInstance.page.set(1);
 
-    FlowRouter.setQueryParams({ term: searchTerm, page: 1 });
+    FlowRouter.setQueryParams({ term: searchTerm, page: 1, genres: templateInstance.selectedGenres.get().join(',') });
   },
 
   'click .dropdown-item'(event, instance) {
     event.preventDefault();
     const genreId = this._id;
-    console.log(this)
     let selectedGenres = instance.selectedGenres.get();
 
     if (selectedGenres.includes(genreId)) {
-      // Genre zaten seçili, kaldır
       selectedGenres = selectedGenres.filter(id => id !== genreId);
     } else {
-      // Genre seçili değil, ekle
       selectedGenres.push(genreId);
     }
 
     instance.selectedGenres.set(selectedGenres);
-    FlowRouter.setQueryParams({ genres: selectedGenres.join(',') }); // URL'yi güncelle
 
-    // Oyunları yeniden yükle
-    instance.page.set(1); // Sayfayı 1 olarak ayarla
-    instance.searchTerm.set(FlowRouter.getQueryParam('term') || '');
+    instance.page.set(1);
+    FlowRouter.setQueryParams({ genres: selectedGenres.join(','), term: instance.searchTerm.get(), page: instance.page.get() });
   }
 });
