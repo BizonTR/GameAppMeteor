@@ -1,0 +1,93 @@
+{
+  "Blaze if": {
+    "prefix": "if",
+    "body": ["{{#if $0}}", "  ", "{{else}}", "  ", "{{/if}}"],
+    "description": "Blaze if",
+    "scope": "html"
+  },
+
+  "Blaze let": {
+    "prefix": "let",
+    "body": ["{{#let $0}}", "  ", "{{/let}}"],
+    "description": "Blaze let",
+    "scope": "html"
+  },
+
+  "Blaze with": {
+    "prefix": "with",
+    "body": ["{{#with $0}}", "  ", "{{/with}}"],
+    "description": "Blaze with",
+    "scope": "html"
+  },
+
+  "Blaze unless": {
+    "prefix": "unless",
+    "body": ["{{#unless $0}}", "  ", "{{/unless}}"],
+    "description": "Blaze unless",
+    "scope": "html"
+  },
+
+  "Blaze each": {
+    "prefix": "each",
+    "body": ["{{#each $0}}", "  ", "{{/each}}"],
+    "description": "Blaze each",
+    "scope": "html"
+  },
+
+  "Create Meteor Template": {
+    "prefix": "template",
+    "body": [
+      "Template.${1:name}.onCreated(function () {",
+      "  this.state = new ReactiveDict(null, {",
+      "",
+      "  })",
+      "",
+      "  this.pagination = new ReactiveDict(null, {",
+      "    currentPage: 1,",
+      "    pageItems: 20,",
+      "    totalCount: 0,",
+      "    totalPages: 0,",
+      "  })",
+      "",
+      "  this.sorting = new ReactiveDict(null, {",
+      "    createdAt: -1,",
+      "  })",
+      "",
+      "  this.filtering = new ReactiveDict(null, {",
+      "",
+      "  })",
+      "",
+      "  this.sortingFields = new ReactiveVar([",
+      "    {",
+      "      sortField: 'name',",
+      "      sortLabel: Translate('i18n.globals', 'name'),",
+      "    },",
+      "    {",
+      "      sortField: 'createdAt',",
+      "      sortLabel: Translate('i18n.globals', 'createdAt'),",
+      "    },",
+      "  ])",
+      "})",
+      "",
+      "Template.${1:name}.onRendered(function () {",
+      "  const self = this",
+      "",
+      "  this.autorun(function () {",
+      "",
+      "  })",
+      "})",
+      "",
+      "Template.${1:name}.events({",
+      "  'click #${2:event}': function (event, templateInstance) {",
+      "",
+      "  },",
+      "})",
+      "",
+      "Template.${1:name}.onDestroyed(function () {",
+      "",
+      "})"
+    ],
+    "description": "Create a Meteor template with onCreated, onRendered, events, and onDestroyed lifecycle hooks.",
+    "scope": "javascript"
+  }
+}

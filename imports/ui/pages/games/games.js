@@ -1,8 +1,8 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { getPaginationButtons } from '../../../api/utils/paging';
 
 Template.games.onCreated(function () {
   this.subscribe('currentUserRoles');
@@ -33,20 +33,33 @@ Template.games.onCreated(function () {
   });
 
   const fetchGames = () => {
-    const term = instance.searchTerm.get();
-    let page = parseInt(instance.page.get(), 10);
-    const selectedGenres = instance.selectedGenres.get();
+    console.log("fetchgames")
+    // URL'deki arama terimini, sayfa numarasını ve seçilen genre'leri kontrol et
+    const term = FlowRouter.getQueryParam('term');
+    const selectedGenres = FlowRouter.getQueryParam('genres') ? FlowRouter.getQueryParam('genres').split(',') : [];
+    let page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
 
-    if (FlowRouter.getQueryParam('page') !== undefined) {
-        FlowRouter.setQueryParams({ page: page });
+    // FlowRouter'daki sayfa numarası zaten doğru ise güncelleme yapma
+    FlowRouter.setQueryParams({ page: page });
+
+    console.log(page)
+    if (page <= 0) {
+      console.log("1e ayarlandı")
+      page = 1;
     }
 
-    const obj = { 
+
+
+    instance.searchTerm.set(term || '');
+    instance.page.set(page);
+    instance.selectedGenres.set(selectedGenres);
+
+    const obj = {
       page,
       limit: 10,
       term,
       selectedGenres,
-     }
+    }
 
     instance.loading.set(true);
     Meteor.call("games.getGames", obj, (error, result) => {
@@ -61,6 +74,17 @@ Template.games.onCreated(function () {
           instance.games.set(result);
           console.log(result)
           instance.dataInfo.set(result);
+
+          // Eğer sayfa numarası geçerli değilse, mevcut sayfayı güncelle
+          if (page > result.totalPages) {
+            page = result.totalPages; // Sayfa numarası totalPages'i geçerse son sayfaya ayarla
+            FlowRouter.setQueryParams({ page: page });
+            //instance.page.set(page);
+          } else {
+            FlowRouter.setQueryParams({ page: result.currentPage });
+            //instance.page.set(result.currentPage);
+          }
+
           instance.noResults.set(false);
         }
       }
@@ -68,30 +92,10 @@ Template.games.onCreated(function () {
     });
   };
 
-  // URL'deki arama terimini, sayfa numarasını ve seçilen genre'leri kontrol et
-  const term = FlowRouter.getQueryParam('term');
-  const selectedGenres = FlowRouter.getQueryParam('genres') ? FlowRouter.getQueryParam('genres').split(',') : [];
-  let page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
-
-  if (page <= 0) {
-    page = 1;
-  }
-
-  instance.searchTerm.set(term || '');
-  instance.page.set(page);
-  instance.selectedGenres.set(selectedGenres);
-
-  this.autorun(() => {
-    fetchGames();
-    // const searchTerm = instance.searchTerm.get();
-    // const page = instance.page.get();
-    // const selectedGenres = instance.selectedGenres.get();
-
-    // if (searchTerm !== FlowRouter.getQueryParam('term') || page !== parseInt(FlowRouter.getQueryParam('page'), 10) || !arraysEqual(selectedGenres, (FlowRouter.getQueryParam('genres') ? FlowRouter.getQueryParam('genres').split(',') : []))) {
-    //   FlowRouter.setQueryParams({ term: searchTerm, page: page, genres: selectedGenres.join(',') });
-    // }
-  });
+  fetchGames();
 });
+
+
 
 Template.games.helpers({
   gamesCount() {
@@ -162,7 +166,21 @@ Template.games.helpers({
     const page = dataInfo.currentPage; // Mevcut sayfa numarasını al
     const totalPages = dataInfo.totalPages || 0;
     return page >= totalPages;
-  }
+  },
+
+  paginationButtons() {
+    const instance = Template.instance();
+    const dataInfo = instance.dataInfo.get(); // dataInfo'yu al
+    const currentPage = dataInfo.currentPage;  // Mevcut sayfa
+    const totalPages = dataInfo.totalPages;  // Toplam sayfa
+    console.log({ currentPage, totalPages })
+    return getPaginationButtons(currentPage, totalPages);
+  },
+
+  isCurrent(page) {
+    const dataInfo = instance.dataInfo.get();
+    return dataInfo.currentPage === page;
+  },
 });
 
 Template.games.events({
@@ -171,7 +189,7 @@ Template.games.events({
     const page = parseInt(event.currentTarget.dataset.page, 10);
     if (page > 0) {
       templateInstance.page.set(page);
-      FlowRouter.setQueryParams({ page: page});
+      FlowRouter.setQueryParams({ page: page });
     }
   },
 
@@ -181,7 +199,7 @@ Template.games.events({
     if (page > 1) {
       page -= 1;
       templateInstance.page.set(page);
-      FlowRouter.setQueryParams({ page: page});
+      FlowRouter.setQueryParams({ page: page });
     }
   },
 
@@ -190,7 +208,7 @@ Template.games.events({
     let page = templateInstance.page.get();
     page += 1;
     templateInstance.page.set(page);
-    FlowRouter.setQueryParams({ page: page});
+    FlowRouter.setQueryParams({ page: page });
   },
 
   'click #search-button'(event, templateInstance) {

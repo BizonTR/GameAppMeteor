@@ -60,26 +60,31 @@
         </tbody>
     </table>
 
-    <!-- Bootstrap 5 Pagination -->
+    <!-- Bootstrap 5 Pagination BU BİR COMPONENT OLMALI-->
+
+    <!-- {{> componentPagination pagination = pagination = {currentPage, totalPage} }} -->
     <nav aria-label="Page navigation">
         <ul class="pagination">
-            <li class="page-item {{#if isPreviousDisabled}}disabled{{/if}}">
-                <a class="page-link" href="#" id="previous-page" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {{#each totalPagesInRange totalPages}}
-            <li class="page-item {{#if isCurrentPage this}}active{{/if}}">
-                <a class="page-link page-number" href="#" data-page="{{this}}">{{this}}</a>
-            </li>
-            {{/each}}
-            <li class="page-item {{#if isNextDisabled}}disabled{{/if}}">
-                <a class="page-link" href="#" id="next-page" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+          <li class="page-item {{#if isPreviousDisabled}}disabled{{/if}}">
+            <a class="page-link" href="#" id="previous-page" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+      
+          <!-- Pagination butonlarını dinamik olarak oluştur -->
+          {{#each paginationButtons}}
+          <li class="page-item {{#if isCurrentPage this}}active{{/if}}">
+            <a class="page-link page-number" href="#" data-page="{{this}}">{{this}}</a>
+          </li>
+          {{/each}}
+      
+          <li class="page-item {{#if isNextDisabled}}disabled{{/if}}">
+            <a class="page-link" href="#" id="next-page" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
         </ul>
-    </nav>
+      </nav>
 
     {{/if}}
     {{/if}}
