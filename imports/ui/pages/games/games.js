@@ -3,6 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { getPaginationButtons } from '../../../api/utils/paging';
+import '../../components/pagination/pagination.js'
 
 Template.games.onCreated(function () {
   this.subscribe('currentUserRoles');
@@ -40,7 +41,7 @@ Template.games.onCreated(function () {
     let page = parseInt(FlowRouter.getQueryParam('page'), 10) || 1;
 
     // FlowRouter'daki sayfa numarası zaten doğru ise güncelleme yapma
-    FlowRouter.setQueryParams({ page: page });
+    //FlowRouter.setQueryParams({ page: page });
 
     console.log(page)
     if (page <= 0) {
@@ -81,7 +82,7 @@ Template.games.onCreated(function () {
             FlowRouter.setQueryParams({ page: page });
             //instance.page.set(page);
           } else {
-            FlowRouter.setQueryParams({ page: result.currentPage });
+            //FlowRouter.setQueryParams({ page: result.currentPage });
             //instance.page.set(result.currentPage);
           }
 
@@ -94,8 +95,6 @@ Template.games.onCreated(function () {
 
   fetchGames();
 });
-
-
 
 Template.games.helpers({
   gamesCount() {
@@ -134,83 +133,18 @@ Template.games.helpers({
     return Template.instance().selectedGenres.get().includes(genreId);
   },
 
+  currentPage() {
+    const dataInfo = Template.instance().dataInfo.get(); // dataInfo'yu al
+    return dataInfo.currentPage || 1; // Eğer currentPage yoksa varsayılan 1 olarak ayarla
+  },
+
   totalPages() {
-    console.log("totalpages")
-    const dataInfo = Template.instance().dataInfo.get();
-    console.log(dataInfo)
-    console.log(Math.max(1, Math.ceil(dataInfo.totalGames / 10)))
-    return Math.max(1, Math.ceil(dataInfo.totalGames / 10));
-  },
-
-  totalPagesInRange() {
-    const dataInfo = Template.instance().dataInfo.get();
-    const totalPages = dataInfo.totalPages || 0;
-    let range = [];
-    for (let i = 1; i <= totalPages; i++) {
-      range.push(i);
-    }
-    return range;
-  },
-
-  isCurrentPage(page) {
-    return Template.instance().page.get() === page;
-  },
-
-  isPreviousDisabled() {
-    return Template.instance().page.get() <= 1;
-  },
-
-  isNextDisabled() {
-    const instance = Template.instance();
-    const dataInfo = instance.dataInfo.get(); // dataInfo'yu al
-    const page = dataInfo.currentPage; // Mevcut sayfa numarasını al
-    const totalPages = dataInfo.totalPages || 0;
-    return page >= totalPages;
-  },
-
-  paginationButtons() {
-    const instance = Template.instance();
-    const dataInfo = instance.dataInfo.get(); // dataInfo'yu al
-    const currentPage = dataInfo.currentPage;  // Mevcut sayfa
-    const totalPages = dataInfo.totalPages;  // Toplam sayfa
-    console.log({ currentPage, totalPages })
-    return getPaginationButtons(currentPage, totalPages);
-  },
-
-  isCurrent(page) {
-    const dataInfo = instance.dataInfo.get();
-    return dataInfo.currentPage === page;
-  },
+    const dataInfo = Template.instance().dataInfo.get(); // dataInfo'yu al
+    return dataInfo.totalPages || 1; // Eğer currentPage yoksa varsayılan 1 olarak ayarla
+  }
 });
 
 Template.games.events({
-  'click .page-number'(event, templateInstance) {
-    event.preventDefault();
-    const page = parseInt(event.currentTarget.dataset.page, 10);
-    if (page > 0) {
-      templateInstance.page.set(page);
-      FlowRouter.setQueryParams({ page: page });
-    }
-  },
-
-  'click #previous-page'(event, templateInstance) {
-    event.preventDefault();
-    let page = templateInstance.page.get();
-    if (page > 1) {
-      page -= 1;
-      templateInstance.page.set(page);
-      FlowRouter.setQueryParams({ page: page });
-    }
-  },
-
-  'click #next-page'(event, templateInstance) {
-    event.preventDefault();
-    let page = templateInstance.page.get();
-    page += 1;
-    templateInstance.page.set(page);
-    FlowRouter.setQueryParams({ page: page });
-  },
-
   'click #search-button'(event, templateInstance) {
     event.preventDefault();
 
@@ -218,7 +152,7 @@ Template.games.events({
     templateInstance.searchTerm.set(searchTerm);
     templateInstance.page.set(1);
 
-    FlowRouter.setQueryParams({ term: searchTerm, page: 1, genres: templateInstance.selectedGenres.get().join(',') });
+    FlowRouter.setQueryParams({ term: searchTerm, page: templateInstance.page.get()});
   },
 
   'click .dropdown-item'(event, instance) {
@@ -235,6 +169,6 @@ Template.games.events({
     instance.selectedGenres.set(selectedGenres);
 
     instance.page.set(1);
-    FlowRouter.setQueryParams({ genres: selectedGenres.join(','), term: instance.searchTerm.get(), page: instance.page.get() });
+    FlowRouter.setQueryParams({ genres: selectedGenres.join(','), page: instance.page.get() });
   }
 });
