@@ -2,7 +2,6 @@ import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import { getPaginationButtons } from '../../../api/utils/paging';
 import '../../components/pagination/pagination.js'
 
 Template.games.onCreated(function () {

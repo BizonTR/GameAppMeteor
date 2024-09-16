@@ -14,6 +14,7 @@ import '../imports/ui/pages/register/register.html';
 import '../imports/ui/pages/login/login.html';
 import '../imports/ui/pages/adminPanel/adminPanel.html';
 import '../imports/ui/pages/games/games.html';
+import '../imports/ui/pages/gameDetails/gameDetails.html';
 
 
 import '../imports/ui/pages/addGame/addGame.js';
@@ -27,6 +28,7 @@ import '../imports/ui/pages/register/register.js';
 import '../imports/ui/pages/login/login.js';
 import '../imports/ui/pages/adminPanel/adminPanel.js';
 import '../imports/ui/pages/games/games.js';
+import '../imports/ui/pages/gameDetails/gameDetails.js';
 
 FlowRouter.route('/', {
   name: 'home',
@@ -120,6 +122,12 @@ FlowRouter.route('/games', {
   }
 });
 
+FlowRouter.route('/games/:id', {
+  name: 'gameDetails',
+  action(params) {
+    this.render('mainLayout', { main: 'gameDetails' });  // mainLayout içinde main bölgesine gameDetails yüklenecek
+  }
+});
 
 // FlowRouter.route('/home', {
 //   // calls just before the action

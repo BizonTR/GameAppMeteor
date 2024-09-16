@@ -14,30 +14,3 @@ export const getPagingData = ({ page = 1, limit = 10, totalCount }) => {
     skip,        // Verileri atlama miktarı (skip için)
   };
 };
-
-
-export const getPaginationButtons = (currentPage, totalPages) => {
-  const maxButtons = 5;
-  const buttons = [];
-
-  // Başlangıç ve bitiş sayfa numaralarını hesapla
-  let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(totalPages, currentPage + 2);
-
-  // Sayfa başı durumu için aralığı ayarla
-  if (currentPage <= 2) {
-    endPage = Math.min(totalPages, startPage + maxButtons - 1);
-  }
-
-  // Sayfa sonu durumu için aralığı ayarla
-  if (currentPage >= totalPages - 1) {
-    startPage = Math.max(1, totalPages - maxButtons + 1);
-  }
-
-  // Sayfa numaralarını doldur
-  for (let i = startPage; i <= endPage; i++) {
-    buttons.push(i);
-  }
-
-  return buttons;
-};

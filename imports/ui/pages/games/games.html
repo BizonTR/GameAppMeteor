@@ -1,70 +1,74 @@
 <template name="games">
     <h1>Games</h1>
     {{#if loading}}
-    <div class="container" style="display: flex; justify-content: center;">
-        <div class="loader"></div> <!-- Yüklenme mesajı -->
-    </div>
+        <div class="container" style="display: flex; justify-content: center;">
+            <div class="loader"></div> <!-- Yüklenme mesajı -->
+        </div>
     {{else}}
 
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Search games..." />
-        <button id="search-button" class="btn btn-primary">Search</button>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search games..." />
+            <button id="search-button" class="btn btn-primary">Search</button>
 
 
-        <!-- Genre Dropdown Menü -->
-        <div class="mb-3">
-            <label class="form-label">Genres:</label>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Genres
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {{#each genres}}
-                    <li>
-                        <a class="dropdown-item" href="#" data-id="{{_id}}">
-                            {{name}} {{#if (isSelected _id)}}(Selected){{/if}}
-                        </a>
-                    </li>
-                    {{/each}}
-                </ul>
+            <!-- Genre Dropdown Menü -->
+            <div class="mb-3">
+                <label class="form-label">Genres:</label>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Select Genres
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {{#each genres}}
+                            <li>
+                                <a class="dropdown-item" href="#" data-id="{{_id}}">
+                                    {{name}} {{#if (isSelected _id)}}(Selected){{/if}}
+                                </a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    {{#if noResults}}
-    <p>No games found.</p>
-    {{else}}
+        {{#if noResults}}
+            <p>No games found.</p>
+        {{else}}
 
-    <p>Total games: {{gamesCount}}</p>
+            <p>Total games: {{gamesCount}}</p>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Genres</th>
-                <th>Created At</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each games}}
-            <tr>
-                <td>{{name}}</td>
-                <td>{{description}}</td>
-                <td>{{formattedGenres}}</td>
-                <td>{{formattedCreatedAt}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Genres</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each games}}
+                        <tr>
+                            <td>
+                                <a href="/games/{{_id}}">
+                                    {{name}}
+                                </a>
+                            </td>
+                            <td>{{description}}</td>
+                            <td>{{formattedGenres}}</td>
+                            <td>{{formattedCreatedAt}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
 
-    <!-- Bootstrap 5 Pagination BU BİR COMPONENT OLMALI-->
+            <!-- Bootstrap 5 Pagination BU BİR COMPONENT OLMALI-->
 
-    <!-- {{> componentPagination pagination = pagination = {currentPage, totalPage} }} -->
-    {{> pagination currentPage=currentPage totalPages=totalPages }}
+            <!-- {{> componentPagination pagination = pagination = {currentPage, totalPage} }} -->
+            {{> pagination currentPage=currentPage totalPages=totalPages }}
 
 
-    {{/if}}
+        {{/if}}
     {{/if}}
 </template>
