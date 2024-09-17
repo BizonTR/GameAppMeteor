@@ -1,0 +1,13 @@
+<template name="pegis">
+    <h2>PEGIs</h2>
+    <button id="go-to-add-pegi">Add New PEGI</button>
+    <ul>
+        {{#each pegis}}
+        <li>
+            {{name}} (Created on: {{formatDate createdAt}})
+            <button class="delete-pegi" data-id="{{_id}}">Delete</button>
+            <button class="update-pegi" data-id="{{_id}}">Update</button>
+        </li>
+        {{/each}}
+    </ul>
+</template>

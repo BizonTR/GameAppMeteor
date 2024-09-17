@@ -12,6 +12,7 @@ Template.genres.onCreated(function () {
 
 Template.genres.helpers({
     genres() {
+        console.log(Genres.find({}, { sort: { createdAt: -1 } }))
         return Genres.find({}, { sort: { createdAt: -1 } });
     },
     formatDate(date) {

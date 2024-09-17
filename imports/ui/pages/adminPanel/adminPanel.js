@@ -53,6 +53,10 @@ Template.adminPanel.events({
 
     'click #go-to-genres'(event) {
         FlowRouter.go('/admin/genres');
+    },
+
+    'click #go-to-pegis'(event) {
+        FlowRouter.go('/admin/pegis');
     }
 });
 

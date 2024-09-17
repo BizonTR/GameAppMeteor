@@ -15,6 +15,9 @@ import '../imports/ui/pages/login/login.html';
 import '../imports/ui/pages/adminPanel/adminPanel.html';
 import '../imports/ui/pages/games/games.html';
 import '../imports/ui/pages/gameDetails/gameDetails.html';
+import '../imports/ui/pages/addPegi/addPegi.html';
+import '../imports/ui/pages/pegis/pegis.html';
+import '../imports/ui/pages/updatePegi/updatePegi.html';
 
 
 import '../imports/ui/pages/addGame/addGame.js';
@@ -29,6 +32,9 @@ import '../imports/ui/pages/login/login.js';
 import '../imports/ui/pages/adminPanel/adminPanel.js';
 import '../imports/ui/pages/games/games.js';
 import '../imports/ui/pages/gameDetails/gameDetails.js';
+import '../imports/ui/pages/addPegi/addPegi.js';
+import '../imports/ui/pages/pegis/pegis.js';
+import '../imports/ui/pages/updatePegi/updatePegi.js';
 
 FlowRouter.route('/', {
   name: 'home',
@@ -102,9 +108,27 @@ adminRoutes.route('/genres', {
   }
 });
 
+adminRoutes.route('/pegis/add-pegi', {
+  action() {
+    this.render('mainLayout', { main: 'addPegi' });
+  }
+});
+
+adminRoutes.route('/pegis', {
+  action() {
+    this.render('mainLayout', { main: 'pegis' });
+  }
+});
+
 adminRoutes.route('/genres/update-genre/:genreId', {
   action(params) {
     this.render('mainLayout', { main: 'updateGenre' });
+  }
+});
+
+adminRoutes.route('/pegis/update-pegi/:pegiId', {
+  action(params) {
+    this.render('mainLayout', { main: 'updatePegi' });
   }
 });
 

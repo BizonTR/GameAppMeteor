@@ -1,0 +1,27 @@
+<template name="addPegi">
+    <h2>Add New PEGI</h2>
+    <form id="add-pegi-form">
+      <div class="mb-3">
+        <label for="pegi-name" class="form-label">PEGI Name:</label>
+        <input type="text" id="pegi-name" name="name" class="form-control" placeholder="Enter pegi name" required>
+      </div>
+      <div class="mb-3">
+        <label for="pegi-imageUrl" class="form-label">PEGI Image URL:</label>
+        <input type="text" id="pegi-imageUrl" name="imageUrl" class="form-control" placeholder="Enter pegi image url" required>
+      </div>
+      <div class="mb-3">
+        <label for="pegi-description" class="form-label">PEGI Description:</label>
+        <input type="text" id="pegi-description" name="description" class="form-control" placeholder="Enter pegi description" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add PEGI</button>
+    </form>
+  
+    {{#if errorMessage}}
+      <div class="alert alert-danger">{{errorMessage}}</div>
+    {{/if}}
+  
+    {{#if successMessage}}
+      <div class="alert alert-success">{{successMessage}}</div>
+    {{/if}}
+  </template>
+  

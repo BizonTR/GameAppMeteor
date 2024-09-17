@@ -1,0 +1,28 @@
+<template name="updatePegi">
+    <h2>Update PEGI</h2>
+    {{#if selectedPegi}}
+    <form id="update-pegi-form">
+        <div>
+            <label for="pegi-name">PEGI Name:</label>
+            <input type="text" id="pegi-name" name="name" value="{{selectedPegi.name}}" required>
+        </div>
+        <div>
+            <label for="pegi-imageUrl">PEGI Image URL:</label>
+            <input type="text" id="pegi-imageUrl" name="imageUrl" value="{{selectedPegi.imageUrl}}" required>
+        </div>
+        <div>
+            <label for="pegi-description">PEGI Description:</label>
+            <input type="text" id="pegi-description" name="description" value="{{selectedPegi.description}}" required>
+        </div>
+        <button type="submit">Update</button>
+    </form>
+    {{else}}
+    <p>No PEGI selected for editing.</p>
+    {{/if}}
+    {{#if errorMessage}}
+    <div class="alert alert-error">{{errorMessage}}</div>
+    {{/if}}
+    {{#if successMessage}}
+    <div class="alert alert-success">{{successMessage}}</div>
+    {{/if}}
+</template>
