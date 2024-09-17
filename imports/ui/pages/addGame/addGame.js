@@ -59,10 +59,11 @@ Template.addGame.events({
     const description = target.description.value;
     const price = parseFloat(target.price.value)
     const selectedGenres = Template.instance().selectedGenres.get(); // Seçilen genre'leri al
+    const coverImageUrl = target.coverImageUrl.value;
 
     // Yeni oyun ekleme metodu çağırma
-    Meteor.call('games.insert', {name, description, createdAt: new Date(), price, genres:selectedGenres}, (error) => {
-      console.log({name, description, price, genres:selectedGenres, createdAt: new Date()})
+    Meteor.call('games.insert', {name, description, createdAt: new Date(), price, genres:selectedGenres, coverImageUrl}, (error) => {
+      console.log({name, description, price, genres:selectedGenres, createdAt: new Date(), coverImageUrl})
       if (error) {
         alert('An error occurred: ' + error.reason);
         console.error(error);
@@ -74,6 +75,7 @@ Template.addGame.events({
         target.price.value = '';
         const selectedGenresInput = document.getElementById('selected-genres');
         selectedGenresInput.value = '';
+        coverImageUrl.value = '';
         FlowRouter.go('/admin/games/add-game');
       }
     });

@@ -18,7 +18,8 @@ export const gameSchema = new SimpleSchema({
     min: 0 // Price alanı negatif olamaz
   },
   genres: Array,
-  "genres.$": String
+  "genres.$": String,
+  coverImageUrl: String,
 });
 
 Games.attachSchema(gameSchema);

@@ -1,7 +1,12 @@
 <template name="gameDetails">
     <h1>GAME DETAIL PAGE</h1>
-    <h2>{{game.name}}</h2>
-    <p>Description: {{game.description}}</p>
-    <p>Genres: {{formattedGenres}}</p>
-    <p>Created At: {{formattedCreatedAt}}</p>
+    {{#if game}}
+        <h2>{{game.name}}</h2>
+        <p>Description: {{game.description}}</p>
+        <p>Genres: {{formattedGenres}}</p>
+        <p>Created At: {{formattedCreatedAt}}</p>
+        <img src="{{game.coverImageUrl}}" alt="{{game.name}} cover image" />
+    {{else}}
+        <p>Loading game details...</p>
+    {{/if}}
 </template>

@@ -36,6 +36,10 @@
       <!-- Hidden input to store selected genres -->
       <input type="hidden" id="selected-genres" name="genres">
     </div>
+    <div>
+      <label for="game-coverImageUrl">Cover Image URL:</label>
+      <input type="string" id="game-coverImageUrl" name="coverImageUrl" value="{{selectedGame.coverImageUrl}}" required>
+    </div>
     <button type="submit">Update</button>
   </form>
   {{else}}
