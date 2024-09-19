@@ -2,53 +2,74 @@
 <template name="updateGame">
   <h2>Update Game</h2>
   {{#if selectedGame}}
-  <form id="update-game-form">
-    <div>
-      <label for="game-name">Game Name:</label>
-      <input type="text" id="game-name" name="name" value="{{selectedGame.name}}" required>
-    </div>
-    <div>
-      <label for="game-description">Game Description:</label>
-      <textarea id="game-description" name="description" required>{{selectedGame.description}}</textarea>
-    </div>
-    <div>
-      <label for="game-price">Game Price:</label>
-      <input type="number" id="game-price" name="price" value="{{selectedGame.price}}" required>
-    </div>
-    <div>
-      <label for="game-createdAt">Created Date:</label>
-      <input type="text" id="game-createdAt" name="createdAt" value="{{formatDate selectedGame.createdAt}}" disabled>
-    </div>
-    <div>
-      <label for="game-genres">Genres:</label>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          Select Genres
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          {{#each genres}}
-          <li><a class="dropdown-item" href="#" data-id="{{_id}}">{{name}} {{#if isSelected _id}}(Selected){{/if}}</a>
-          </li>
-          {{/each}}
-        </ul>
+    <form id="update-game-form">
+      <div>
+        <label for="game-name">Game Name:</label>
+        <input type="text" id="game-name" name="name" value="{{selectedGame.name}}" required>
       </div>
-      <!-- Hidden input to store selected genres -->
-      <input type="hidden" id="selected-genres" name="genres">
-    </div>
-    <div>
-      <label for="game-coverImageUrl">Cover Image URL:</label>
-      <input type="string" id="game-coverImageUrl" name="coverImageUrl" value="{{selectedGame.coverImageUrl}}" required>
-    </div>
-    <button type="submit">Update</button>
-  </form>
+      <div>
+        <label for="game-description">Game Description:</label>
+        <textarea id="game-description" name="description" required>{{selectedGame.description}}</textarea>
+      </div>
+      <div>
+        <label for="game-price">Game Price:</label>
+        <input type="number" id="game-price" name="price" value="{{selectedGame.price}}" required>
+      </div>
+      <div>
+        <label for="game-createdAt">Created Date:</label>
+        <input type="text" id="game-createdAt" name="createdAt" value="{{formatDate selectedGame.createdAt}}" disabled>
+      </div>
+      <div>
+        <label for="game-genres">Genres:</label>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Select Genres
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {{#each genres}}
+              <li><button class="dropdown-item-genre" href="#" data-id="{{_id}}">{{name}}
+                  {{#if isSelectedGenre _id}}(Selected){{/if}}</button>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+        <!-- Hidden input to store selected genres -->
+        <input type="hidden" id="selected-genres" name="genres">
+      </div>
+
+      <div>
+        <label for="game-pegis">PEGIs:</label>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Select PEGIs
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {{#each pegis}}
+              <li><button class="dropdown-item-pegi" href="#" data-id="{{_id}}">{{name}}
+                  {{#if isSelectedPegi _id}}(Selected){{/if}}</button>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+        <input type="hidden" id="selected-pegis" name="pegis">
+      </div>
+
+      <div>
+        <label for="game-coverImageUrl">Cover Image URL:</label>
+        <input type="string" id="game-coverImageUrl" name="coverImageUrl" value="{{selectedGame.coverImageUrl}}"
+          required>
+      </div>
+      <button type="submit">Update</button>
+    </form>
   {{else}}
-  <p>No game selected for editing.</p>
+    <p>No game selected for editing.</p>
   {{/if}}
   {{#if errorMessage}}
-  <div class="alert alert-error">{{errorMessage}}</div>
+    <div class="alert alert-error">{{errorMessage}}</div>
   {{/if}}
   {{#if successMessage}}
-  <div class="alert alert-success">{{successMessage}}</div>
+    <div class="alert alert-success">{{successMessage}}</div>
   {{/if}}
 </template>

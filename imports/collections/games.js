@@ -20,6 +20,8 @@ export const gameSchema = new SimpleSchema({
   genres: Array,
   "genres.$": String,
   coverImageUrl: String,
+  pegis: Array,
+  "pegis.$": String,
 });
 
 Games.attachSchema(gameSchema);

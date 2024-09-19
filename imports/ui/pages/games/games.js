@@ -81,7 +81,7 @@ Template.games.onCreated(function () {
             FlowRouter.setQueryParams({ page: page });
             //instance.page.set(page);
           } else {
-            //FlowRouter.setQueryParams({ page: result.currentPage });
+            FlowRouter.setQueryParams({ page: result.currentPage });
             //instance.page.set(result.currentPage);
           }
 

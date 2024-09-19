@@ -25,16 +25,35 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           {{#each genres}}
-          <li><a class="dropdown-item" href="#" data-id="{{_id}}">{{name}} {{isSelected _id}}</a></li>
+            <li><button class="dropdown-item-genre" href="#" data-id="{{_id}}">{{name}} {{isSelectedGenre _id}}</button></li>
           {{/each}}
         </ul>
       </div>
       <!-- Hidden input to store selected genres -->
       <input type="hidden" id="selected-genres" name="genres">
     </div>
+
+    <div class="mb-3">
+      <label class="form-label">PEGIs:</label>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Select PEGIs
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          {{#each pegis}}
+            <li><button class="dropdown-item-pegi" href="#" data-id="{{_id}}">{{name}} {{isSelectedPegi _id}}</button></li>
+          {{/each}}
+        </ul>
+      </div>
+      <!-- Hidden input to store selected pegis -->
+      <input type="hidden" id="selected-pegis" name="pegis">
+    </div>
+
     <div class="mb-3">
       <label for="game-coverImageUrl" class="form-label">Cover Image URL:</label>
-      <input type="text" id="game-coverImageUrl" name="coverImageUrl" class="form-control" placeholder="Cover Image Url" required>
+      <input type="text" id="game-coverImageUrl" name="coverImageUrl" class="form-control" placeholder="Cover Image Url"
+        required>
     </div>
     <button type="submit" class="btn btn-primary">Create Game</button>
   </form>

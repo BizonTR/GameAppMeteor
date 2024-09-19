@@ -9,6 +9,7 @@ new ValidatedMethod({
     page: {
       type: SimpleSchema.Integer,
       min: 1,
+      optional: true
     },
     limit: {
       type: SimpleSchema.Integer,
@@ -25,9 +26,9 @@ new ValidatedMethod({
     'selectedGenres.$': {
       type: String,
     },
-  }).validator(),
+  }).validator({ clean: true }),
   
-  run({ page, limit, term = '', selectedGenres = [] }) {
+  run({ page = 1, limit, term = '', selectedGenres = [] }) {
     const query = {};
 
     // Genre filtresi ekle
@@ -50,12 +51,8 @@ new ValidatedMethod({
       totalCount: totalGames,
     });
 
-    // Eğer skip toplam oyun sayısını aşıyorsa, son sayfayı hesapla ve skip değerini yeniden ayarla
-    const adjustedPage = skip >= totalGames ? totalPages : currentPage;
-    const adjustedSkip = (adjustedPage - 1) * limit;
-
     // Oyunları getir
-    const games = Games.find(query, { sort: { createdAt: -1 }, skip: adjustedSkip, limit: limit }).fetch();
+    const games = Games.find(query, { sort: { createdAt: -1 }, skip: skip, limit: limit }).fetch();
 
     // Genre bilgilerini oyunlara ekle
     games.forEach(game => {

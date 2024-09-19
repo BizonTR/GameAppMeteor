@@ -11,6 +11,7 @@ import { Migrations } from 'meteor/percolate:migrations';
 import './migrations/'; // Migration dosyanızı buraya ekleyin
 import { Roles } from 'meteor/alanning:roles';
 import { Accounts } from 'meteor/accounts-base';
+import './config/simpleSchema.js'
 
 Meteor.startup(() => {
   console.log("server startup");
