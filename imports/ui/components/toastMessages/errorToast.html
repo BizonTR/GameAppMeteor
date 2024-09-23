@@ -1,0 +1,14 @@
+<!-- imports/ui/components/errorToast.html -->
+<template name="errorToast">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <div id="customToast" class="toast bg-danger text-white" role="alert" aria-live="assertive" aria-atomic="true"
+            data-bs-delay="3000">
+            <div class="toast-body">
+                {{errorMessage}} <!-- This will display the error message from the reactive variable -->
+                <div class="mt-2 pt-2 border-top">
+                    <button type="button" class="btn btn-dark btn-sm" data-bs-dismiss="toast">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

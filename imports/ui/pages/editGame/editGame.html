@@ -1,5 +1,8 @@
 <!-- imports/ui/pages/deleteGame.html -->
 <template name="editGames">
+
+  {{> errorToast errorMessage=errorMessage}}
+
   <h1>Edit Games</h1>
   {{#if loading}}
     <div class="container" style="display: flex; justify-content: center;">
@@ -59,7 +62,7 @@
               <td>{{description}}</td>
               <td>{{formattedGenres}}</td>
               <td>{{formattedCreatedAt}}</td>
-              <td> 
+              <td>
                 <button class="update-game" data-id="{{_id}}">Update</button>
                 <button class="delete-game" data-id="{{_id}}">Delete</button>
               </td>

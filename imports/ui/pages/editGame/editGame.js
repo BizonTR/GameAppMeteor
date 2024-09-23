@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import '../../components/pagination/pagination.js'
+import { showToast } from '../../components/toastMessages/errorToast.js';
 
 
 Template.editGames.onCreated(function () {
@@ -41,8 +42,13 @@ Template.editGames.onCreated(function () {
 
     Meteor.call("games.getGames", obj, (error, result) => {
       if (error) {
-        console.error('Oyunları getirirken hata oluştu:', error);
+        const errorMessage = error.reason || error.message || "Bilinmeyen bir hata oluştu.";
+
+        // Hata mesajını göstermek için showToast fonksiyonunu çağırın
+        showToast(instance,errorMessage);
+
         instance.noResults.set(true);
+
       } else {
         if (result.games.length === 0) {
           instance.noResults.set(true);
@@ -53,7 +59,7 @@ Template.editGames.onCreated(function () {
         }
         instance.dataInfo.set(result);
       }
-      
+
       instance.loading.set(false);
     });
   };
