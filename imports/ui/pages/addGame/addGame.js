@@ -13,7 +13,7 @@ Template.addGame.onCreated(function () {
 
   this.autorun(() => {
     this.subscribe('genres', () => {
-      this.genres.set(Genres.find().fetch()); // Genres koleksiyonundan türleri yükleyin
+      this.genres.set(Genres.find().fetch());
     });
 
     this.subscribe('pegiDatas', () => {
@@ -97,12 +97,13 @@ Template.addGame.events({
     const name = target.name.value;
     const description = target.description.value;
     const price = parseFloat(target.price.value)
-    const selectedGenres = Template.instance().selectedGenres.get(); // Seçilen genre'leri al
+    const selectedGenres = Template.instance().selectedGenres.get();
     const coverImageUrl = target.coverImageUrl.value;
     const selectedPegis = Template.instance().selectedPegis.get();
 
     // Yeni oyun ekleme metodu çağırma
-    Meteor.call('games.insert', {name, description, createdAt: new Date(), price, genres:selectedGenres, coverImageUrl, pegis:selectedPegis}, (error) => {
+    Meteor.call('games.insert', {name, description, createdAt: new Date(), price,
+      genres:selectedGenres, coverImageUrl, pegis:selectedPegis}, (error) => {
       if (error) {
         alert('An error occurred: ' + error.reason);
         console.error(error);

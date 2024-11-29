@@ -15,5 +15,5 @@ import './config/simpleSchema.js'
 
 Meteor.startup(() => {
   console.log("server startup");
-  //Migrations.migrateTo('latest');
+  Migrations.migrateTo('latest');
 });
